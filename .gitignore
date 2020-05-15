@@ -1,0 +1,13 @@
+# Ignore the usual stuff
+venv
+*.pyc
+.DS_Store
+.env
+*.xml
+*.iml
+
+# Ignore secret! (if they exist)
+secret
+
+# Ignore data
+data
