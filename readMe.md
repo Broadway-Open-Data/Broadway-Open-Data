@@ -3,14 +3,13 @@ _Scalable web scraping for all Broadway data (ever)._
 
 
 ## Getting started:
-1. create a directory and set as current: _(only do 1st time)_
+1. Create a clone of this repository: _(only do 1st time)_
 ```
-mkdir broadway-web-scraping
-cd broadway-web-scraping
+git clone https://github.com/ybressler/Broadway-Data.git
 ```
-2. Create a clone of this repository: _(only do 1st time)_
+2. Set current working directory to repository:
 ```
-git clone url
+cd Broadway-Data
 ```
 3. create a virtual environment _(only do 1st time)_
 ```
