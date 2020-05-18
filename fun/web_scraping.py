@@ -2,7 +2,11 @@ import os
 import re
 from pathlib import Path
 import requests
+import urllib3
 from urllib.parse import urlparse
+
+# Disable warnings
+urllib3.disable_warnings()
 
 # Get a usable name for the file
 def get_usable_name(url, ext=".txt"):
@@ -19,7 +23,7 @@ def get_usable_name(url, ext=".txt"):
     # https://www.broadwayworld.com/browseshows.cfm?showtype=BR&open_yr=2020
 
 
-def make_smart_request(url, temp_dir, verbose=False):
+def make_smart_request(url, temp_dir, verify=True, verbose=False):
     """
     Makes a smart request to a url. Saves response locally to `temp_dir`.
     If the request was previously made, data is loaded from local file.
@@ -52,7 +56,7 @@ def make_smart_request(url, temp_dir, verbose=False):
             print(f"making request from {url=}")
 
         # Make the request
-        r = requests.get(url)
+        r = requests.get(url, verify=False, timeout=10)
         html = r.text
 
         with open(file_path, "w") as f:
