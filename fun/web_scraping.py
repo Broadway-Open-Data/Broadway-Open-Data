@@ -1,5 +1,6 @@
 import os
 import re
+from pathlib import Path
 import requests
 from urllib.parse import urlparse
 
@@ -34,7 +35,7 @@ def make_smart_request(url, temp_dir, verbose=False):
     file_path = os.path.join(temp_dir, file_path) # Locate in proper dir
 
     # Check if opened
-    if os.path.isfile(file_path):
+    if os.path.isfile(Path(file_path)):
 
         # Option for printing
         if verbose:
