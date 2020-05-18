@@ -1,1 +1,2 @@
 python3 get_show_url_by_year.py
+python3 get_content_per_show.py

@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import json
+from pathlib import Path
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
@@ -14,13 +15,13 @@ from fun.web_scraping import make_smart_request
 # ------------------------------------------------------------------------------
 
 # First, make a directory for temp files
-temp_dir = "data/temp"
+temp_dir = Path("data/temp")
 os.makedirs(temp_dir, exist_ok=True)
 
 #  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 # Second, check if file already exists:
-all_urls_dict_path = "data/show_url_by_year.json"
+all_urls_dict_path = Path("data/show_url_by_year.json")
 if os.path.isfile(all_urls_dict_path):
     sys.exit(f"file already exists:\n * {all_urls_dict_path=}")
 
@@ -43,6 +44,10 @@ all_links_year = [urljoin(base_url,x.get("href")) for x in all_links]
 # ------------------------------------------------------------------------------
 # Loop through each year and get urls
 # ------------------------------------------------------------------------------
+
+# Make a new temp dir for year data
+temp_dir = Path("data/temp/year")
+os.makedirs(temp_dir, exist_ok=True)
 
 # instantiate an empty dict
 all_urls_dict = {}
