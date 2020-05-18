@@ -56,7 +56,7 @@ for key, value in show_urls.items():
         os.makedirs(show_dir, exist_ok=True)
 
         # Now download the cotent
-        html = make_smart_request(v, temp_dir=show_dir)
+        html = make_smart_request(v, temp_dir=show_dir, verify=False)
         soup = BeautifulSoup(html, features="html.parser")
 
         # Get links to additional internal
@@ -82,12 +82,12 @@ for key, value in show_urls.items():
         i+=1 # total number of shows...
 
         # Break twice to exit
-        if i> 300:
-            break
+        # if i> 700:
+        #     break
 
     # Break twice to exit
-    if i> 300:
-        break
+    # if i> 700:
+    #     break
 
 # ------------------------------------------------------------------------------
 
