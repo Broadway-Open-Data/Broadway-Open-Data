@@ -56,7 +56,7 @@ for key, value in show_urls.items():
         # in a given key pair + how many directories in the "year" dir
         # ...
         # skip if not in valid range:
-        if i<2740:
+        if i<2840:
             i+=1
             continue
 
