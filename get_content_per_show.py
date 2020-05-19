@@ -81,13 +81,13 @@ for key, value in show_urls.items():
 
         i+=1 # total number of shows...
 
-        # Break twice to exit
-        if i> 1100:
-            break
-
-    # Break twice to exit
-    if i> 1100:
-        break
+    #     # Break twice to exit
+    #     if i> 1100:
+    #         break
+    #
+    # # Break twice to exit
+    # if i> 1100:
+    #     break
 
 # ------------------------------------------------------------------------------
 
