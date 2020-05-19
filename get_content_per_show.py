@@ -50,6 +50,16 @@ for key, value in show_urls.items():
         if i%10==0 and i>0:
             print(f"{i=}")
 
+
+        # Consider building a function which counts the number of already existing files
+        # and begins i at that point – or something like that. Like the number of values
+        # in a given key pair + how many directories in the "year" dir
+        # ...
+        # skip if not in valid range:
+        if i<2740:
+            i+=1
+            continue
+
         show_id = re.search("showid=([0-9]+)", v).group(1)
         # Make a dir for that show
         show_dir = os.path.join(year_dir, "show_id_"+show_id)
