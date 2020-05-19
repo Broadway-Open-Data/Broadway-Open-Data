@@ -9,7 +9,7 @@ git clone https://github.com/ybressler/Broadway-Data.git
 ```
 2. Set current working directory to repository:
 ```
-cd Broadway-Data
+cd Broadway-Open-Data
 ```
 3. create a virtual environment _(only do 1st time)_
 ```
