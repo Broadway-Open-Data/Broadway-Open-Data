@@ -10,7 +10,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 # Import custom modules
-from fun.web_scraping import make_smart_request
+from utils.web_scraping import make_smart_request
 
 # ------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ for key, value in show_urls.items():
         # in a given key pair + how many directories in the "year" dir
         # ...
         # skip if not in valid range:
-        if i<8890:
+        if i<9290:
             i+=1
             continue
 
