@@ -10,7 +10,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 # Import custom modules
-from fun.web_scraping import make_smart_request
+from utils.web_scraping import make_smart_request
 
 # ------------------------------------------------------------------------------
 
