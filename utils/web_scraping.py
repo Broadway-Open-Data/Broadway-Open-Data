@@ -56,7 +56,7 @@ def make_smart_request(url, temp_dir, verify=True, verbose=False):
             print(f"making request from {url=}")
 
         # Make the request
-        r = requests.get(url, verify=False, timeout=15)
+        r = requests.get(url, verify=False, timeout=20)
         html = r.text
 
         with open(file_path, "w") as f:
