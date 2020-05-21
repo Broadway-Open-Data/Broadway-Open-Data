@@ -34,14 +34,11 @@ show_urls = json.loads(open(show_urls_path).read())
 # Count the number of shows – Useful for chunking your loops
 # (in case you don't want to overwhelm any server or your actual machine)
 i = 0
-valid = False
 
 # Begin looping through each one:
 for key, value in show_urls.items():
 
-    # Only print if a new data point is captured
-    if valid:
-        print(f"Beginning the year = {key}")
+    print(f"Beginning the year = {key}")
 
     # Make a path for that year
     year_dir = os.path.join(data_dir, key)
@@ -56,13 +53,11 @@ for key, value in show_urls.items():
         # in a given key pair + how many directories in the "year" dir
         # ...
         # skip if not in valid range:
-        if i<10130:
-            i+=1
-            continue
+        # if i<100: # Fill this in manually for the time being...
+        #     i+=1
+        #     continue
 
-        # Now, you can begin printing year..
-        valid = True
-        
+
         # See the progress...
         if i%10==0 and i>0:
             print(f"{i=}")
