@@ -3,6 +3,8 @@ _Scalable web scraping for all Broadway data (ever)._
 
 
 ## Getting started:
+
+## Mac Users:
 1. Create a clone of this repository: _(only do 1st time)_
 ```
 git clone https://github.com/ybressler/Broadway-Data.git
