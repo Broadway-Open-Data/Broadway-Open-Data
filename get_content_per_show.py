@@ -10,7 +10,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 # Import custom modules
-from fun.web_scraping import make_smart_request
+from utils.web_scraping import make_smart_request
 
 # ------------------------------------------------------------------------------
 
@@ -39,6 +39,7 @@ i = 0
 for key, value in show_urls.items():
 
     print(f"Beginning the year = {key}")
+
     # Make a path for that year
     year_dir = os.path.join(data_dir, key)
     os.makedirs(year_dir, exist_ok=True)
@@ -46,9 +47,21 @@ for key, value in show_urls.items():
     #  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     # A list of the shows for that year
     for v in value:
+
+        # Consider building a function which counts the number of already existing files
+        # and begins i at that point – or something like that. Like the number of values
+        # in a given key pair + how many directories in the "year" dir
+        # ...
+        # skip if not in valid range:
+        # if i<100: # Fill this in manually for the time being...
+        #     i+=1
+        #     continue
+
+
         # See the progress...
         if i%10==0 and i>0:
             print(f"{i=}")
+
 
         show_id = re.search("showid=([0-9]+)", v).group(1)
         # Make a dir for that show
@@ -81,12 +94,12 @@ for key, value in show_urls.items():
 
         i+=1 # total number of shows...
 
-        # Break twice to exit
-        # if i> 700:
-        #     break
-
-    # Break twice to exit
-    # if i> 700:
+    #     # Break twice to exit
+    #     if i> 1100:
+    #         break
+    #
+    # # Break twice to exit
+    # if i> 1100:
     #     break
 
 # ------------------------------------------------------------------------------
