@@ -29,6 +29,7 @@ pip install -r requirements.txt
 ```
 python3 main.py
 ```
+
 ### Windows Users:
 1. Create a clone of this repository: _(only do 1st time)_
 ```
@@ -54,3 +55,40 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
+
+----
+
+## Making changes
+When making changes, operate in a new branch (so conflicts can be reviewed and adjusted). This is accomplished by the following commands:
+
+1. Navigate to the project directory.
+
+**Mac:**
+```
+cd Documents/Broadway-Open-Data
+```
+**Windows:**
+```
+chrdir Documents\Broadway-Open-Data
+```
+2. List current branches:
+```
+git branch
+```
+3. Switch to the branch you want:
+If the branch exists:
+```
+git checkout my-branch
+```
+If the branch doesn't exist, make a new branch and switch:
+```
+git checkout -b my-new-branch
+```
+4. Add your changes as you normally would.
+```
+git add .
+git commit -m "this is a commit message"
+```
+5. When your code is ready to be merged, create a pull request from the branch tab on github's website interface.
+
+----
