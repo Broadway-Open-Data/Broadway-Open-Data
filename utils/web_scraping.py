@@ -10,15 +10,10 @@ urllib3.disable_warnings()
 
 # Get a usable name for the file
 def get_usable_name(url, ext=".txt"):
-
-    file_name = re.sub("[\/\.:]", "_", url) + ext
+    forbidden_chars = ["\/", "\.", ":","<",">","\"","\\","\|","\?","\*"]
+    forbidden_chars = "".join(forbidden_chars)
+    file_name = re.sub(f"[{forbidden_chars}]", "_", url) + ext
     return file_name
-
-    # This fancy stuff below is not necessary...
-    # o = urlparse(url)
-    # url_domain = re.search("www\.([a-z]+)\.com", o.netloc).group(1)
-    # url_path = re.search("/([a-z]+)", o.path).group(1)
-    # file_name = "_".join([url_domain, url_path]) + ext
 
     # https://www.broadwayworld.com/browseshows.cfm?showtype=BR&open_yr=2020
 
