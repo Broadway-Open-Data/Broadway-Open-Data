@@ -2,7 +2,7 @@
 
 def do_something():
     """A placeholder function"""
-    print("successful!")
+    print("word!")
 
 
 # ==============================================================================
