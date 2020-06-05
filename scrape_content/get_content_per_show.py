@@ -9,6 +9,9 @@ from pathlib import Path
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
+# Change the path
+sys.path.append('.')
+
 # Import custom modules
 from utils.web_scraping import make_smart_request
 
