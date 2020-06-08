@@ -19,8 +19,19 @@ from utils.web_scraping import get_usable_name
 
 # ==============================================================================
 
-data_path = Path(os.path.join("data","shows"))
+# Load the current data
+curr_data_path = Path(os.path.join("data","all_show.json"))
+if os.path.isfile(curr_data_path):
+    with open(curr_data_path,"r") as f:
+        all_data = json.load(f)
+        print(all_data)
+else:
+    all_data = []
 
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+# Set up the path where all the data is located
+data_path = Path(os.path.join("data","shows"))
 
 
 # ------------------------------------------------------------------------------
@@ -74,7 +85,7 @@ def some_function():
             all_show_data.append(show_data)
 
         # Stop after a while...
-        if int(year)>1800:
+        if int(year)>1775:
             break
 
     return all_show_data
@@ -87,4 +98,8 @@ def some_function():
 if __name__ == '__main__':
     # Do this
     show_data = some_function()
-    print(show_data)
+    # Save your show data
+    with open(curr_data_path,"w") as f:
+        json.dump(show_data, f)
+
+    print("Dumped data successfully")
