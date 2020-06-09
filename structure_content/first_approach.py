@@ -15,7 +15,7 @@ sys.path.append('.')
 # Custom stuff
 from utils.web_scraping import get_usable_name
 from utils.string_manipulations import str_to_int
-from structure_content.get_page_content import get_title, get_tables
+from structure_content.get_page_content import get_production_info, get_creative_info
 # ==============================================================================
 
 # Load the current data
@@ -66,27 +66,27 @@ def some_function():
                 #  NOTE: NEED TO BE STRATEGIC HERE
                 #  THERE ARE MULTIPLE TYPES OF FILES
                 #  EACH HAS DIFF KIND OF DATA...
-
-                if "backstage_php" not in full_path:
+                if "backstage_php" not in full_path and "creative_php" not in full_path:
                     continue
 
-                # Open the file
-                with open(full_path, "r") as f:
-                    html = f.read()
-
-                # Load into a soup object
+                # Open the file & Load into a soup object
+                html = open(full_path).read()
                 soup = BeautifulSoup(html, features="html.parser")
 
                 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-                # get title
-                if "title" not in show_data.keys():
-                    show_data["title"] = get_title(soup)
+                if "backstage_php" in full_path:
+                    show_info = get_production_info(soup)
+                    show_data.update({"show_info": show_info})
 
-                all_tables = get_tables(soup)
+                if "creative_php" in full_path:
+                    creative_info = get_creative_info(soup)
+                    show_data.update({"creative_info": creative_info})
 
-                # Add show info
-                show_data.update(all_tables.get("show_info"))
+
+
+                # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
 
                 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -95,7 +95,7 @@ def some_function():
             all_show_data.append(show_data)
 
         # Stop after a while...
-        if int(year)>1900:
+        if str_to_int(year)>1800:
             break
 
     return all_show_data

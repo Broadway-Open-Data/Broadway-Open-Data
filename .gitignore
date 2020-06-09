@@ -10,6 +10,9 @@ venv
 *.xml
 *.iml
 
+# Ignore any notebooks
+.ipynb
+
 # Ignore secret! (if they exist)
 secret
 
