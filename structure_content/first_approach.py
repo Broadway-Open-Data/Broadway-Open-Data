@@ -3,8 +3,6 @@ Parse content from existing `data/shows` folder. Store in the folder `data/struc
 
 investigate using this link: https://www.broadwayworld.com/shows/backstage.php?showid=313359
 """
-
-
 # Import the usuals
 import os
 import re
@@ -16,15 +14,16 @@ sys.path.append('.')
 
 # Custom stuff
 from utils.web_scraping import get_usable_name
-
+from utils.string_manipulations import str_to_int
+from structure_content.get_page_content import get_title, get_tables
 # ==============================================================================
 
 # Load the current data
 curr_data_path = Path(os.path.join("data","all_show.json"))
+
 if os.path.isfile(curr_data_path):
     with open(curr_data_path,"r") as f:
         all_data = json.load(f)
-        print(all_data)
 else:
     all_data = []
 
@@ -35,6 +34,10 @@ data_path = Path(os.path.join("data","shows"))
 
 
 # ------------------------------------------------------------------------------
+
+
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 def some_function():
     """Walk through my folders"""
@@ -50,9 +53,10 @@ def some_function():
         for show_id in os.listdir(year_dir):
             show_dir = os.path.join(year_dir,show_id)
 
+            # Get the show id
             show_data = {
-                "year":year,
-                "show_id":re.search("[0-9]+", show_id).group(0)
+                "year":str_to_int(year),
+                "show_id": str_to_int(show_id, True)
             }
 
             # get individual shows
@@ -77,15 +81,21 @@ def some_function():
 
                 # get title
                 if "title" not in show_data.keys():
-                    show_data["title"] = soup.title.text
+                    show_data["title"] = get_title(soup)
+
+                all_tables = get_tables(soup)
+
+                # Add show info
+                show_data.update(all_tables.get("show_info"))
 
                 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-            # After the show
+
+            # Save data for each show
             all_show_data.append(show_data)
 
         # Stop after a while...
-        if int(year)>1775:
+        if int(year)>1900:
             break
 
     return all_show_data
@@ -102,4 +112,4 @@ if __name__ == '__main__':
     with open(curr_data_path,"w") as f:
         json.dump(show_data, f)
 
-    print("Dumped data successfully")
+    print(f"Saving data for {len(show_data)} shows.")
