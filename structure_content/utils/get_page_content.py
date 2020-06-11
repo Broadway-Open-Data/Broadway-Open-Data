@@ -67,6 +67,45 @@ def get_creative_info(soup):
 
     return data
 
+# ------------------------------------------------------------------------------
+
+def get_cast_info(soup):
+    """gets all the data for the cast of the show"""
+
+    data = {}
+    if not type(soup) == BeautifulSoup:
+        return data # Error
+
+    # Get table data
+    more_data = get_div_table(soup, table_class="staff")
+    data.update(more_data)
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    # This creates a list of records – will result in nested data structure
+    cast = []
+    table = soup.find_all("div",{"class":"info"})
+    for row in table:
+        row_data ={}
+
+        # Get the values one by one
+        for key in ["name","role"]:
+            # first the item
+            value = row.find("div",{"class":key})
+            value_text = value.text
+            # then its href
+            value_href = value.find("a",{"href":True})
+            value_href = value_href["href"] if value_href else None
+            # save to row data
+            row_data.update({key:value_text, key+"_URL":value_href})
+        # Save each row
+        cast.append(row_data)
+    # At the end, add to data
+    data["cast"] = cast
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    return data
 
 # ------------------------------------------------------------------------------
 
@@ -125,6 +164,8 @@ def get_table(soup, table_class):
             # Convert to a dict and save
             data.update(dict(tb_data))
 
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
         # Send them all out
         return data
 
@@ -177,6 +218,9 @@ def get_div_table(soup, table_class):
         tb_data_dict.pop('', None)
         # Update
         data.update(tb_data_dict)
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+
     return data
 
 
