@@ -15,7 +15,7 @@ sys.path.append('.')
 # Custom stuff
 from utils.web_scraping import get_usable_name
 from utils.string_manipulations import str_to_int
-from structure_content.get_page_content import get_production_info, get_creative_info
+from structure_content.utils.get_page_content import get_production_info, get_creative_info
 # ==============================================================================
 
 # Load the current data

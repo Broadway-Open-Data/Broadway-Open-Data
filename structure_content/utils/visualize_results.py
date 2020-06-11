@@ -13,7 +13,7 @@ import pandas as pd
 
 from pathlib import Path
 from IPython.display import display
-sys.path.append('.')
+sys.path.append('..')
 
 # Set pandas display options
 pd.options.display.max_rows = 20
