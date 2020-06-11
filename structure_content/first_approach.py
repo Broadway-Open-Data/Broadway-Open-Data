@@ -15,22 +15,25 @@ sys.path.append('.')
 # Custom stuff
 from utils.web_scraping import get_usable_name
 from utils.string_manipulations import str_to_int
-from structure_content.utils.get_page_content import get_production_info, get_creative_info
+from structure_content.utils.get_page_content import get_production_info, get_creative_info, get_cast_info
 # ==============================================================================
 
 # Load the current data
-curr_data_path = Path(os.path.join("data","all_show.json"))
+def load_curr_data(data_path):
+    """opens the json and returns existing data"""
 
-if os.path.isfile(curr_data_path):
-    with open(curr_data_path,"r") as f:
-        all_data = json.load(f)
-else:
-    all_data = []
+    if os.path.isfile(data_path):
+        with open(data_path,"r") as f:
+            all_data = json.load(f)
+    else:
+        all_data = []
+
+    return all_data
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-# Set up the path where all the data is located
-data_path = Path(os.path.join("data","shows"))
+
+
 
 
 # ------------------------------------------------------------------------------
@@ -39,18 +42,26 @@ data_path = Path(os.path.join("data","shows"))
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-def some_function():
+def some_function(all_data):
     """Walk through my folders"""
+    # Set up the path where all the data is located
+    all_data_path = Path(os.path.join("data","shows"))
+
+    all_show_ids = [x["show_id"] for x in all_data] if all_data else []
 
     i=0
-    all_show_data = []
 
     # Get each year
-    for year in os.listdir(data_path):
-        year_dir = os.path.join(data_path,year)
+    for year in os.listdir(all_data_path):
+        year_dir = os.path.join(all_data_path,year)
 
         # Get each show
         for show_id in os.listdir(year_dir):
+
+            # Don't collect shows you already have
+            if str_to_int(show_id, True) in all_show_ids:
+                continue
+
             show_dir = os.path.join(year_dir,show_id)
 
             # Get the show id
@@ -66,7 +77,7 @@ def some_function():
                 #  NOTE: NEED TO BE STRATEGIC HERE
                 #  THERE ARE MULTIPLE TYPES OF FILES
                 #  EACH HAS DIFF KIND OF DATA...
-                if "backstage_php" not in full_path and "creative_php" not in full_path:
+                if not any([x in full_path for x in ["backstage_php", "creative_php", "cast_php"]]):
                     continue
 
                 # Open the file & Load into a soup object
@@ -83,6 +94,10 @@ def some_function():
                     creative_info = get_creative_info(soup)
                     show_data.update({"creative_info": creative_info})
 
+                if "cast_php" in full_path:
+                    cast_info = get_cast_info(soup)
+                    show_data.update({"cast_info": cast_info})
+
 
 
                 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -92,13 +107,15 @@ def some_function():
 
 
             # Save data for each show
-            all_show_data.append(show_data)
+            all_data.append(show_data)
 
         # Stop after a while...
-        if str_to_int(year)>1800:
+        # There's a bug somewhere here -- one of the shows in this year are messed up
+        if str_to_int(year)>1901:
             break
 
-    return all_show_data
+
+    return all_data
 
 
 # ==============================================================================
@@ -107,9 +124,12 @@ def some_function():
 
 if __name__ == '__main__':
     # Do this
-    show_data = some_function()
+    data_path = Path(os.path.join("data","all_show.json"))
+    all_data = load_curr_data(data_path)
+    n_start = len(all_data)
+    all_data = some_function(all_data)
     # Save your show data
-    with open(curr_data_path,"w") as f:
-        json.dump(show_data, f)
+    with open(data_path,"w") as f:
+        json.dump(all_data, f)
 
-    print(f"Saving data for {len(show_data)} shows.")
+    print(f"+{len(all_data)-n_start} records ... (start with {n_start})")

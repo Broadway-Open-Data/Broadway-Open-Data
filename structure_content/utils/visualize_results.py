@@ -17,7 +17,7 @@ sys.path.append('..')
 
 # Set pandas display options
 pd.options.display.max_rows = 20
-pd.options.display.max_columns = 50
+pd.options.display.max_columns = 150
 pd.options.display.width = 1500
 
 # Load the current data
@@ -32,6 +32,8 @@ drop_cols = df.columns[df.columns.str.endswith('_URL')]
 df.drop(columns=drop_cols, inplace=True)
 
 # Visualize
+display(df.shape)
+
 display(df)
 
 # ------------------------------------------------------------------------------
