@@ -1,7 +1,9 @@
-
+import sys
 import re
 import json
 from bs4 import BeautifulSoup
+
+sys.path.append('..')
 
 # Custom stuff
 from utils.string_manipulations import str_to_int, remove_special_chars
