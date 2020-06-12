@@ -74,9 +74,7 @@ def some_function(all_data):
             for file in os.listdir(show_dir):
                 full_path = os.path.join(show_dir, file)
 
-                #  NOTE: NEED TO BE STRATEGIC HERE
-                #  THERE ARE MULTIPLE TYPES OF FILES
-                #  EACH HAS DIFF KIND OF DATA...
+                # Don't load files you aren't ready to load...
                 if not any([x in full_path for x in ["backstage_php", "creative_php", "cast_php"]]):
                     continue
 

@@ -12,16 +12,40 @@ from utils.string_manipulations import str_to_int, remove_special_chars
 # ------------------------------------------------------------------------------
 
 def get_title(soup, regex=True):
-    """gets the title of the show"""
+    """
+    gets the title of the show
+
+    ----
+    If title is not available for the page, will look for h2 tag which has the show's
+    title. (Developed heuristically...)
+    """
 
     if not type(soup) == BeautifulSoup:
         return None # Error
 
     # Otherwise, proceed
-    title = soup.head.title.text
+    title = soup.head.title
+    if title:
+        title = title.text
 
-    # Parse for show title
-    # "King Henry VIII - 1799 Broadway - Backstage & Production Info"
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    elif regex:
+        pattern = re.compile("(.*) Show")
+        title = soup.find("h2", text=pattern)
+        if not title:
+            return None
+        title = title.text
+        title = pattern.search(title).group(1)
+        return title
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+    else:
+        return None
+
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
     if regex:
         pattern = re.compile("(.*) - [0-9]{4} Broadway")
         title = pattern.search(title).group(1) # If this breaks, will have to figure out why...
@@ -219,139 +243,6 @@ def get_div_table(soup, table_class):
         # Update
         data.update(tb_data_dict)
 
-    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+    # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     return data
-
-
-# [<div>
-# <span class="left"><a href="/people/Woody-Allen/"><strong>Woody Allen</strong></a> </span>
-# <span class="right"><strong>Bookwriter</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Herbert-Farjeon/"><strong>Herbert Farjeon</strong></a> </span>
-# <span class="right"><strong>Bookwriter</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Nina-Warner-Hook/"><strong>Nina Warner Hook</strong></a> </span>
-# <span class="right"><strong>Bookwriter</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Jonathan-Tunick-/"><strong>Jonathan Tunick</strong></a>
-# </span>
-# <span class="right"><strong>Orchestrator</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Edwin-Aldridge/"><strong>Edwin Aldridge</strong></a>
-# </span>
-# <span class="right"><strong>Assistant Stage Manager</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Jay-Brower/"><strong>Jay Brower</strong></a>
-# </span>
-# <span class="right"><strong>Orchestrator</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Serge-Casal/"><strong>Serge Casal</strong></a>
-# </span>
-# <span class="right"><strong>Hair Designer</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Irvin-Dorfman/"><strong>Irvin Dorfman</strong></a>
-# </span>
-# <span class="right"><strong>General Press Representative</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Al-Goldin/"><strong>Al Goldin</strong></a>
-# </span>
-# <span class="right"><strong>General Manager</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Milton-Greene/"><strong>Milton Greene</strong></a>
-# </span>
-# <span class="right"><strong>Vocal Music Arranger</strong>
-# </span>
-# </div>, <div class="no-dots">
-# <span class="left">
-# </span>
-# <span class="right"><strong>Musical Director</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Tom-Hansen/"><strong>Tom Hansen</strong></a>
-# </span>
-# <span class="right"><strong>Associate Director</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Ray-Harrison/"><strong>Ray Harrison</strong></a>
-# </span>
-# <span class="right"><strong>Choreographer</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Fred-Hearn/"><strong>Fred Hearn</strong></a>
-# </span>
-# <span class="right"><strong>Production Stage Manager</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Christopher-Hewett/"><strong>Christopher Hewett</strong></a>
-# </span>
-# <span class="right"><strong>Director</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Jack-Holmes/"><strong>Jack Holmes</strong></a>
-# </span>
-# <span class="right"><strong>Dance Music Arranger</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Harris-Masterson/"><strong>Harris Masterson</strong></a>
-# </span>
-# <span class="right"><strong>Producer</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Carroll-Masterson/"><strong>Carroll Masterson</strong></a>
-# </span>
-# <span class="right"><strong>Producer</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Irl-Mowery/"><strong>Irl Mowery</strong></a>
-# </span>
-# <span class="right"><strong>Assistant to the Producer</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Joseph-Olney/"><strong>Joseph Olney</strong></a>
-# </span>
-# <span class="right"><strong>Stage Manager</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/The-Shubert-Organization/"><strong>The Shubert Organization</strong></a>
-# </span>
-# <span class="right"><strong>Theatre Owner / Operator</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Jane-Randall/"><strong>Jane Randall</strong></a>
-# </span>
-# <span class="right"><strong>Press Representative</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Morris-Stonzek/"><strong>Morris Stonzek</strong></a>
-# </span>
-# <span class="right"><strong>Music Contractor</strong>
-# </span>
-# </div>, <div>
-# <span class="left"><a href="/people/Fred-Voelpel/"><strong>Fred Voelpel</strong></a>
-# </span>
-# <span class="right"><strong>Scenic Designer</strong>
-# </span>
-# </div>, <div class="no-dots">
-# <span class="left">
-# </span>
-# <span class="right"><strong>Costume Designer</strong>
-# </span>
-# </div>, <div class="no-dots">
-# <span class="left">
-# </span>
-# <span class="right"><strong>Lighting Designer</strong>
-# </span>
-# </div>]
-
-
-#
