@@ -4,7 +4,7 @@ Write new documentation here.
 **NOTE:** Need to explain what each of these things are doing...
 
 ## 1. Getting Started
-Read the [Getting Started](www.google.com) page.
+Read the [Getting Started](https://github.com/Broadway-Open-Data/Broadway-Open-Data/blob/master/gettingStarted.md) page.
 
 ## 2. Scrape Content
 *This will take > 12 hours to run...*
@@ -36,5 +36,5 @@ _You'll need login credetentials for this..._
 
 ----
 
-##6. Completed!
+## 6. Completed!
 Hoorah! You're done getting all the data
