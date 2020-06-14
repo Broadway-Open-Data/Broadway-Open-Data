@@ -32,7 +32,7 @@ def get_title(soup, regex=True):
 
     elif regex:
         pattern = re.compile("(.*) Show")
-        title = soup.find("h2", text=pattern)
+        title = soup.body.find("h2", text=pattern)
         if not title:
             return None
         title = title.text
@@ -109,7 +109,7 @@ def get_cast_info(soup):
 
     # This creates a list of records – will result in nested data structure
     cast = []
-    table = soup.find_all("div",{"class":"info"})
+    table = soup.body.find_all("div",{"class":"info"})
     for row in table:
         row_data ={}
 
