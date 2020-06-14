@@ -47,7 +47,8 @@ for show_record in all_data:
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 # Save here when finished
-print(f"saving data for {len(all_show_info)} records")
+print(f"saving data for {len(all_show_info):,} records")
+
 save_data_path = Path(os.path.join("data","all_show_info.json"))
 with open(save_data_path,"w") as f:
     json.dump(all_show_info,f)

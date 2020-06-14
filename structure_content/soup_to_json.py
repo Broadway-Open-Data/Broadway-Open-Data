@@ -108,8 +108,8 @@ def some_function(all_data):
 
         # Stop after a while...
         # There's a bug somewhere here -- one of the shows in this year are messed up
-        if str_to_int(year)>1950:
-            break
+        # if str_to_int(year)>1950:
+        #     break
 
 
     return all_data
