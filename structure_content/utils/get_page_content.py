@@ -68,7 +68,7 @@ def get_production_info(soup):
         return data # Error
 
     # Get the title
-    data["title"] = get_title(soup)
+    data["title"] = get_title(soup,regex=True)
 
     # Get table data
     more_data = get_table(soup, table_class="production-info")
