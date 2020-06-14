@@ -7,17 +7,22 @@ import os
 import re
 import sys
 import json
+import numpy as np
 import pandas as pd
 from IPython.display import display
 
 from pathlib import Path
-sys.path.append('..')
+sys.path.append('.')
 
 # Set pandas display options
-pd.options.display.max_rows = 20
+pd.options.display.max_rows = 100
 pd.options.display.max_columns = 150
 pd.options.display.width = 1500
 
+# Import custom stuff
+from clean_data.utils.extract_values import extract_date_from_opening_date
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
 # Load the current data
@@ -30,9 +35,13 @@ if not os.path.isfile(curr_data_path):
 with open(curr_data_path,"r") as f:
     all_data = json.load(f)
 
+
+
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
 # Load to a dataframe
 df = pd.DataFrame.from_records(all_data)
+
 
 # Convert relevant datetime columns
 date_col = ["Opening", "Closing", "Previews"]
@@ -40,41 +49,87 @@ for col in date_col:
     df[col] = pd.to_datetime(df[col], cache=True, errors="coerce")
 
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+# ------------------------------------------------------------------------------
+
 # Production type
 production_type_dict = {"Return Engagement":"Revival", "American Premiere":"Premiere"}
 df["Production Type"] = df["Production Type"].map(production_type_dict)
+
 
 # Categorical columns:
 cat_cols = ["Production Type", "Run Type", "Market", "Show type", "Version"]
 for col in cat_cols:
     df[col] = df[col].astype("category")
 
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
 # Numeric cols
 num_cols = ["show_id","year"]
 for col in num_cols:
     df[col] = df[col].astype(int)
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+# ------------------------------------------------------------------------------
+
+# Extract opening date from opening info
+replace_dict = {
+    "unknown":None,
+    "Never officially opened":None,
+    "not announced":None
+    }
+
+s = extract_date_from_opening_date(df["Opening Info"])
+
+# If use pandas method, this below gets messed up...
+df["Opening"] = np.where(df["Opening"].notna(), df["Opening"], s)
+
+
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+
+# If never opened
+map_dict = {
+    "unknown":None,
+    "Never officially opened":True,
+    "not announced":True
+    }
+df["Show Never Opened"] = np.where(df["Opening Info"].notna(), df["Opening Info"].map(map_dict), False)
+
+
+
+# ------------------------------------------------------------------------------
+
 # Clean up Intermissions
 
 
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+# ------------------------------------------------------------------------------
+
 # Clean up Running Time
 
 
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+# ------------------------------------------------------------------------------
+
 # Clean up # Performances
 
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-# Clean up Theatres
 
 
 # ------------------------------------------------------------------------------
+
+# Clean up Theatres
+
+
+
+
+# ------------------------------------------------------------------------------
+
 # Save here when finished
+
 print(f"saving data for {len(df):,} records")
 
 save_data_path = Path(os.path.join("data","all_show_info_cleaned.json"))
