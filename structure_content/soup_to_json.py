@@ -108,7 +108,7 @@ def some_function(all_data):
 
         # Stop after a while...
         # There's a bug somewhere here -- one of the shows in this year are messed up
-        if str_to_int(year)>1980:
+        if str_to_int(year)>1800:
             break
 
 
@@ -121,7 +121,7 @@ def some_function(all_data):
 
 if __name__ == '__main__':
     # Do this
-    data_path = Path(os.path.join("data","all_shows.json"))
+    data_path = Path(os.path.join("data","all_shows_data.json"))
     all_data = load_curr_data(data_path)
     n_start = len(all_data)
     all_data = some_function(all_data)

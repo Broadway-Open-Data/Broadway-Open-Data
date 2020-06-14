@@ -18,7 +18,7 @@ from pathlib import Path
 sys.path.append('..')
 
 # Load the current data
-curr_data_path = Path(os.path.join("data","all_shows_old.json"))
+curr_data_path = Path(os.path.join("data","all_shows_data.json"))
 
 if not os.path.isfile(curr_data_path):
     raise AssertionError(f"file doesn't exist for '{curr_data_path}'")
