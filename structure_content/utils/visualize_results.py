@@ -10,6 +10,7 @@ import re
 import sys
 import json
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from pathlib import Path
 from IPython.display import display
@@ -34,6 +35,10 @@ df.drop(columns=drop_cols, inplace=True)
 # Visualize
 display(df.shape)
 
-display(df)
+plt.figure(figsize=(10,4))
+df["year"].hist(bins=100)
+
+plt.title("Broadway Shows / Year", weight="bold", size=14)
+plt.show()
 
 # ------------------------------------------------------------------------------
