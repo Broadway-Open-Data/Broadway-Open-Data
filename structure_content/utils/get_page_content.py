@@ -48,7 +48,8 @@ def get_title(soup, regex=True):
 
     if regex:
         pattern = re.compile("(.*) - [0-9]{4} Broadway")
-        title = pattern.search(title).group(1) # If this breaks, will have to figure out why...
+        title_tmp = pattern.search(title)
+        title = title_tmp.group(1) if title_tmp else title# If this breaks, will have to figure out why...
 
     # Finally
     return title
