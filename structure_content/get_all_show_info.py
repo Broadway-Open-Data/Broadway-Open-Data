@@ -41,7 +41,6 @@ for show_record in all_data:
     # Add the following values:
     for x in ["show_id","year"]:
         record[x] = show_record.get(x)
-
     # Save
     all_show_info.append(record)
 
