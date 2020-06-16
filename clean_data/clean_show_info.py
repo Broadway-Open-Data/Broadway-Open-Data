@@ -53,7 +53,7 @@ for col in date_col:
 
 # Production type
 production_type_dict = {"Return Engagement":"Revival", "American Premiere":"Premiere"}
-df["Production Type"] = df["Production Type"].map(production_type_dict)
+df["Production Type"] = df["Production Type"].replace(production_type_dict)
 
 
 # Categorical columns:
@@ -72,6 +72,7 @@ for col in num_cols:
 
 # ------------------------------------------------------------------------------
 
+# Some dates are missing...so fill them in through this column
 # Extract opening date from opening info
 replace_dict = {
     "unknown":None,
