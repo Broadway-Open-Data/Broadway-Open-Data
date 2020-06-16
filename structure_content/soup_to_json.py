@@ -86,7 +86,7 @@ def some_function(all_data):
                 if "backstage_php" in full_path:
                     show_info = get_production_info(soup)
                     show_data.update({"show_info": show_info})
-
+                    print(show_data)
                 if "creative_php" in full_path:
                     creative_info = get_creative_info(soup)
                     show_data.update({"creative_info": creative_info})
@@ -108,7 +108,7 @@ def some_function(all_data):
 
         # Stop after a while...
         # There's a bug somewhere here -- one of the shows in this year are messed up
-        # if str_to_int(year)>1950:
+        # if str_to_int(year)>1800:
         #     break
 
 

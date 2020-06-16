@@ -148,43 +148,40 @@ def get_table(soup, table_class):
     # Which table is which?
     for tb in tables:
         table_label = tb.find_previous_sibling("h2").text
-        data["table_label"] = table_label
 
         # This is the one we want
         if table_label.endswith("Show Information"):
-
-            # Initalize empty list (put data here)
+            data["table_label"] = table_label
             tb_data = []
 
-            # get the table body
-            tb_body = tb.find('tbody')
-
-            # Get each row, then loop
-            rows = tb_body.find_all('tr')
-
-            for row in rows:
+            for row in tb.find_all("tr"):
                 row_vals = []
 
-                # If there's a link, get the link
+                # Read right to left
                 for ele in row.find_all('td'):
 
+                    # get the text
+                    ele_text = remove_special_chars(ele.text.strip())
+
+                    # Save your links
                     if ele.find("a"):
                         href = ele.find("a",{"href":True})["href"]
-
-                        # If you have a theatre_id, save it
-                        if row_vals[0]=="Theatres:":
-                            theatre_id = get_X_id(href)
-                            tb_data.append(["theatre_id",theatre_id])
-
-
-                    # Otherwise, continue
-                    ele = remove_special_chars(ele.text.strip())
+                        # Allow to place for theatre id
+                        if re.search("theatre_id=[0-9]*",href):
+                            tb_data.append(["theatre_id",href])
+                        # Allow potential other urls...
+                        else:
+                            tb_data.append([ele_text+"_URL",href])
 
                     # Save the values from the row
-                    row_vals.append(ele)
+                    row_vals.append(ele_text)
 
                 # Save the row value
-                tb_data.append(row_vals)
+                if row_vals:
+                    tb_data.append(row_vals)
+
+
+            # ---------------------------------------------------------
 
             # Convert to a dict and save
             data.update(dict(tb_data))
