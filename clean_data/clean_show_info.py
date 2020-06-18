@@ -24,7 +24,6 @@ from clean_data.utils.extract_values import extract_date_from_opening_date
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-
 # Load the current data
 curr_data_path = Path(os.path.join("data","all_show_info.json"))
 
@@ -72,6 +71,40 @@ for col in num_cols:
 
 # ------------------------------------------------------------------------------
 
+# Clean up title
+pattern = re.compile(" - Broadway .*")
+df["title"] = df["title"].str.replace(pattern,"", regex=True)
+
+# ------------------------------------------------------------------------------
+
+# Clean up show id
+df["theatre_id"] = df["theatre_id"].str.extract(r"([0-9]+$)")
+
+# ------------------------------------------------------------------------------
+
+# Clean up Theatres
+df["Theatres"] = df["Theatres"].str.extract("(.*) \(New York")
+
+# ------------------------------------------------------------------------------
+
+# Simplify show type
+map_dict = {
+    "Play with Music":"Play",
+    "Operetta":"Musical",
+    "Pantomime":"Musical",
+    "Solo":"Play",
+    "Opera Bouffe":"Musical",
+    "Vaudeville":"Musical",
+    "One-Acts":"Play",
+    "Ballet":"Other",
+    "Dance":"Other",
+    "Performance":"Other",
+    "Benefit":"Other"
+    }
+df["Show type simple"] = df["Show type"].replace(map_dict)
+
+# ------------------------------------------------------------------------------
+
 # Some dates are missing...so fill them in through this column
 # Extract opening date from opening info
 replace_dict = {
@@ -98,7 +131,6 @@ map_dict = {
 df["Show Never Opened"] = np.where(df["Opening Info"].notna(), df["Opening Info"].map(map_dict), False)
 
 
-
 # ------------------------------------------------------------------------------
 
 # Clean up Intermissions
@@ -116,7 +148,6 @@ df["Show Never Opened"] = np.where(df["Opening Info"].notna(), df["Opening Info"
 # ------------------------------------------------------------------------------
 
 # Clean up # Performances
-
 
 
 
