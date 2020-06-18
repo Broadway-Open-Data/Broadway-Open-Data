@@ -56,7 +56,7 @@ df["Production Type"] = df["Production Type"].replace(production_type_dict)
 
 
 # Categorical columns:
-cat_cols = ["Production Type", "Run Type", "Market", "Show type", "Version"]
+cat_cols = ["Production Type", "Run Type", "Market", "Show type", "Version", "Show type"]
 for col in cat_cols:
     df[col] = df[col].astype("category")
 
@@ -164,5 +164,9 @@ df["Show Never Opened"] = np.where(df["Opening Info"].notna(), df["Opening Info"
 
 print(f"saving data for {len(df):,} records")
 
-save_data_path = Path(os.path.join("data","all_show_info_cleaned.json"))
-df.to_json(save_data_path, orient="records")
+# save_data_path = Path(os.path.join("data","all_show_info_cleaned.json"))
+# df.to_json(save_data_path, orient="records")
+
+# Data is much smaller in CSV format...
+save_data_path = Path(os.path.join("data","all_show_info_cleaned.csv"))
+df.to_csv(save_data_path, index=False)
