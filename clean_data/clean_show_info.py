@@ -134,15 +134,58 @@ df["Show Never Opened"] = np.where(df["Opening Info"].notna(), df["Opening Info"
 # ------------------------------------------------------------------------------
 
 # Clean up Intermissions
-
-
+# YB: Nikil has got this...
 
 
 # ------------------------------------------------------------------------------
 
 # Clean up Running Time
+# Before doing this, need to investigate shows with multiple parts...
+def extract_time_from_running_time(x):
+    """extracts the number of minutes from the running time"""
+
+    if not x or type(x)!=str:
+        return None
+
+    pattern_dict = {
+        "one":"1",
+        "two":"2",
+        "three":"3",
+        "four":"4",
+        "five":"5",
+        "hrs":"hours",
+        "mins":"minutes",
+        }
+    pattern_dict = {re.compile(k,re.I | re.MULTILINE):v for k,v in pattern_dict.items()}
+
+    # clean up x:
+    for k,v in pattern_dict.items():
+        if k.search(x):
+            x = k.sub(v, x, 2)
+    # return x
+    # Instantiate minutes
+    total_n_minutes = 0
+
+    # If there are hours
+    n_hours = re.search("([0-9]+) hour", x.lower(), re.I)
+    if n_hours:
+        n_hours = n_hours.group(1)
+
+        # convert to an int
+        n_hours = int(n_hours)
+        total_n_minutes += 60 * n_hours
+
+    # If there are minutes
+    n_minutes = re.search("([0-9]+) minutes", x, re.I)
+    if n_minutes:
+        n_minutes = n_minutes.group(1)
+        total_n_minutes += int(n_minutes)
+
+    return total_n_minutes
 
 
+# This will eventually overwrite the previous values...
+df["Running Time New"] = df["Running Time"].apply(extract_time_from_running_time)
 
 
 # ------------------------------------------------------------------------------
