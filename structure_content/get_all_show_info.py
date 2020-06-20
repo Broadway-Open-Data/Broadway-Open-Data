@@ -31,6 +31,32 @@ with open(curr_data_path,"r") as f:
 
 all_show_info = []
 
+def runTime(string):
+    hour, minute = string.split("hours")
+    if hour == "one":
+        hour = 60
+    elif hour == "two":
+        hour = 60 * 2
+    elif hour == "three":
+        hour = 60 * 3
+    else:
+        hour = (60 * int(hour))
+
+    minutesWithoutIntermission = hour + int(minute.strip("minutes")
+    intermission = minute.split("with")[1].strip("intermission")
+
+    if intermission == "one":
+        pass
+    elif hour == "two":
+        pass
+    else:
+        pass
+
+    totalTime = intermission +  minutesWithoutIntermission
+
+    return totalTime
+
+
 
 for show_record in all_data:
     record = show_record["show_info"]
@@ -44,9 +70,9 @@ for show_record in all_data:
 
     #Add Running time Key to all shows:
     if record.get("Running Time") != None:
-        #execute function
+        record[Running Time] = runTime(record.get("Running Time"))
     else:
-        #execute function
+        record[Running Time] = runTime("0 hours and 0 minutes with zero intermission")
 
     # Save
     all_show_info.append(record)
