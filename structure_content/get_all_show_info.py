@@ -31,9 +31,9 @@ with open(curr_data_path,"r") as f:
 
 all_show_info = []
 
+
 for show_record in all_data:
     record = show_record["show_info"]
-
     # Delete this if it exists...
     if "table_label" in record.keys():
         del record["table_label"]
@@ -41,6 +41,13 @@ for show_record in all_data:
     # Add the following values:
     for x in ["show_id","year"]:
         record[x] = show_record.get(x)
+
+    #Add Running time Key to all shows:
+    if record.get("Running Time") != None:
+        #execute function
+    else:
+        #execute function
+
     # Save
     all_show_info.append(record)
 
