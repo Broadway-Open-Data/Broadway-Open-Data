@@ -32,29 +32,47 @@ with open(curr_data_path,"r") as f:
 all_show_info = []
 
 def runTime(string):
-    hour, minute = string.split("hours")
-    if hour == "one":
-        hour = 60
-    elif hour == "two":
-        hour = 60 * 2
-    elif hour == "three":
-        hour = 60 * 3
-    else:
-        hour = (60 * int(hour))
+    # Test Cases
+    if string == "TBA":
+        return "No Running Time Info"
+    elif string == "0200":
+        return "120 minutes"
 
-    minutesWithoutIntermission = hour + int(minute.strip("minutes")
-    intermission = minute.split("with")[1].strip("intermission")
+    timeList = string.split("hour")
+
+    if len(timeList) == 2:  # Initial string contain 'hour'
+        hour = timeList[0]
+        minute = timeList[1].split("and")[1].strip("minutes")
+        intermission = timeList[1].split("with")[1].strip("intermission")
+        print(minute, "minute")
+        print(timeList[1].split("and"), "split")
+        print(timeList[1].split("and")[1], "split-index")
+    elif len(timeList) == 1: # Initial string doesn't contain 'hour'
+        minute = timeList.split("minutes")[0]
+        intermission = timeList.split("with")[1].strip("intermission")
+
+    if hour != None:
+        if hour == "one":
+            hour = 60
+        elif hour == "two":
+            hour = 60 * 2
+        elif hour == "three":
+            hour = 60 * 3
+        else:
+            hour = (60 * int(hour))
+
+    minutesWithoutIntermission = int(hour or "0") + int(minute)
 
     if intermission == "one":
-        pass
+        intermission = 15
     elif hour == "two":
-        pass
+        intermission = 30
     else:
-        pass
+        intermission = 0
 
     totalTime = intermission +  minutesWithoutIntermission
 
-    return totalTime
+    return "{} minutes".format(totalTime)
 
 
 
@@ -70,9 +88,9 @@ for show_record in all_data:
 
     #Add Running time Key to all shows:
     if record.get("Running Time") != None:
-        record[Running Time] = runTime(record.get("Running Time"))
+        record["Running Time"] =runTime(record.get("Running Time"))
     else:
-        record[Running Time] = runTime("0 hours and 0 minutes with zero intermission")
+        record["Running Time"] = "No Running Time Info"
 
     # Save
     all_show_info.append(record)
