@@ -191,6 +191,35 @@ def get_table(soup, table_class):
         # Send them all out
         return data
 
+# ------------------------------------------------------------------------------
+
+# Use this function when scraping through the soup
+def get_data_from_theatre_soup(soup):
+    """
+    returns table from soup
+    """
+    record = {}
+    tables = soup.body.find_all("table", {"role":False})
+    for tb in tables:
+        table_label = tb.find_previous_sibling("h1")
+
+        # Theater info table
+        if table_label:
+
+            # update the theater name
+            record.update({"theatre name":table_label.text.strip()})
+            for span in tb.find_all("span"):
+                record.update({span.get("itemprop"):remove_special_chars(span.text.strip())})
+
+            #Update the vals
+            for row in tb.find_all("p"):
+                row_key = remove_special_chars(row.find("strong").text.strip())
+                row_val = remove_special_chars(row.find("strong").next_sibling.strip())
+                record.update({row_key:row_val})
+        else:
+            # I don't want to parse the history of the theater...
+            continue
+    return record
 
 
 # ------------------------------------------------------------------------------

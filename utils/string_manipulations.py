@@ -18,7 +18,7 @@ def remove_special_chars(string):
     """remove unwanted characters"""
 
     # Remove entirely
-    pattern = re.compile("[:]*")
+    pattern = re.compile("[:]+")
     new_string = pattern.sub("", string)
 
     # remove newlines

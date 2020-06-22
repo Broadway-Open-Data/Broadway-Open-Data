@@ -9,6 +9,7 @@ import sys
 import json
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from IPython.display import display
 
 from pathlib import Path
@@ -20,7 +21,7 @@ pd.options.display.max_columns = 150
 pd.options.display.width = 1500
 
 # Import custom stuff
-from clean_data.utils.extract_values import extract_date_from_opening_date, extract_time_from_running_time
+from clean_data.utils.extract_values import extract_date_from_opening_date, extract_time_from_running_time, extract_n_intermissions
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -42,7 +43,8 @@ with open(curr_data_path,"r") as f:
 df = pd.DataFrame.from_records(all_data)
 
 # Drop all columns ending with `_URL`
-drop_cols = df.columns[df.columns.str.endswith("_URL")]
+drop_cols = list(df.columns[df.columns.str.endswith("_URL")])
+drop_cols.extend(["Market"])
 df.drop(columns=drop_cols, inplace=True)
 
 # Convert relevant datetime columns
@@ -59,9 +61,10 @@ df["Production Type"] = df["Production Type"].replace(production_type_dict)
 
 
 # Categorical columns:
-cat_cols = ["Production Type", "Run Type", "Market", "Show type", "Version", "Show type"]
+cat_cols = ["Production Type", "Run Type", "Show type", "Version", "Show type"]
 for col in cat_cols:
-    df[col] = df[col].astype("category")
+    if col in df.columns:
+        df[col] = df[col].astype("category")
 
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -85,9 +88,8 @@ df["theatre_id"] = df["theatre_id"].str.extract(r"([0-9]+$)")
 
 # ------------------------------------------------------------------------------
 
-# Clean up Theatres
-df["Theatres"] = df["Theatres"].str.extract("(.*) \(New York")
-
+# Clean up Theatres (Probs discard later...)
+df["Theatres"] = df["Theatres"].str.extract('(.+?) \(')
 # ------------------------------------------------------------------------------
 
 # Simplify show type
@@ -139,11 +141,40 @@ df.drop(columns=["Opening Info"], inplace=True)
 
 # ------------------------------------------------------------------------------
 
-# Clean up Intermissions
-# YB: Nikil has got this...
+# THE FOLLOWING IS DONE MANUALLY
+
+# Replace any shows with multiple parts
+z = df["Running Time"].astype(str).str.contains("Part")
+
+# Iterate through shows with multiple parts
+for idx, row in df[z].iterrows():
+    title = row["title"]
+    if title == "Harry Potter and the Cursed Child":
+        df.loc[idx, "Intermissions"] = 2
+        df.loc[idx, "Run Time"] = 2*60 + 40 + 2*60 + 35
+    if title == "Angels in America":
+        df.loc[idx, "Intermissions"] = 4
+        df.loc[idx, "Run Time"] = 3*60 + 30 + 4*60
 
 
 # ------------------------------------------------------------------------------
+
+# Clean up Intermissions
+
+# Set to float (not int) because of nan values
+# see this SO answer for more context: https://stackoverflow.com/a/21290084/10521959
+df["Intermissions"] = df["Intermissions"].replace({"":np.nan}).astype(float)
+df["Intermissions 2"] = df["Running Time"].apply(extract_n_intermissions)
+
+# Take the highest value
+df["Intermissions"] = df[["Intermissions","Intermissions 2"]].max(axis=1)
+
+# Delete what you don't need
+df.drop(columns=["Intermissions 2"], inplace=True)
+
+
+# ------------------------------------------------------------------------------
+
 # Clean up running time
 df["Running Time"] = df["Running Time"].apply(extract_time_from_running_time)
 
@@ -180,15 +211,51 @@ def extract_version(x):
 
 # Not a meaningful column...
 df["Version"] = df["Version"].apply(extract_version)
+df["Pre-Broadway"] = df["Version"].map({"broadway":False,"revival":False,"pre-broadway":True})
 
+df.drop(columns=["Version"], inplace=True)
 
 # ------------------------------------------------------------------------------
 
+# Clean up run type
+df["Limited Run"] = df["Run Type"].map({
+    "Unknown":np.nan,
+    "Open Run":False,
+    "Limited Run":True,
+    "Repertory (Limited Run)":True,
+    "Repertory":False
+    })
+
+# Clean up run type
+df["Repertory"] = df["Run Type"].map({
+    "Unknown":np.nan,
+    "Open Run":False,
+    "Limited Run":False,
+    "Repertory (Limited Run)":True,
+    "Repertory":True
+    })
+
+df.drop(columns=["Run Type"], inplace=True)
+
+# ------------------------------------------------------------------------------
+
+# Rename some columns
+df.columns = df.columns.str.title()
+rename_dict = {
+    "Theatre_Id":"Theatre ID",
+    "Theatres":"Theatre Name (from Show Info)",
+    "Show_Id":"Show ID",
+    "Opening":"Opening Date",
+    "Previews":"Previews Date",
+    "Closing":"Closing Date",
+    "# Performances":"N Performances",
+
+}
+df.rename(columns=rename_dict, inplace=True)
+
+# ------------------------------------------------------------------------------
 # Save here when finished
 print(f"saving data for {len(df):,} records")
-
-# save_data_path = Path(os.path.join("data","all_show_info_cleaned.json"))
-# df.to_json(save_data_path, orient="records")
 
 # Data is much smaller in CSV format...
 save_data_path = Path(os.path.join("data","all_show_info_cleaned.csv"))

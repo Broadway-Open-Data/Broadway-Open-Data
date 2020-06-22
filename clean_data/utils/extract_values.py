@@ -97,3 +97,40 @@ def extract_time_from_running_time(x):
         total_n_minutes += int(n_minutes)
 
     return total_n_minutes
+
+# ------------------------------------------------------------------------------
+
+# N intermissions
+def extract_n_intermissions(x):
+    """extracts the number of intermissions from the running time"""
+
+    # These values are null
+    if not x or type(x)!=str or x=="TBA" or x=="0200":
+        return None
+
+    pattern_dict = {
+        "no":"0",
+        "zero":"0",
+        "one":"1",
+        "two":"2",
+        "three":"3",
+        "four":"4",
+        "five":"5",
+        }
+    pattern_dict = {re.compile(k,re.I | re.MULTILINE):v for k,v in pattern_dict.items()}
+
+    # In the string `x` – replace any keys with the values
+    for k,v in pattern_dict.items():
+        if k.search(x):
+            x = k.sub(v, x, 2)
+
+
+    # If there are intermissions
+    n_intermissions = re.search("([0-9]+) intermission", x.lower(), re.I)
+    if n_intermissions:
+        n_intermissions = n_intermissions.group(1)
+
+        # convert to an int and add
+        n_intermissions = int(n_intermissions)
+        return n_intermissions
+    return None
