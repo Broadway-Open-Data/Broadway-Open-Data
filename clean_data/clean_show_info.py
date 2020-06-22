@@ -20,7 +20,7 @@ pd.options.display.max_columns = 150
 pd.options.display.width = 1500
 
 # Import custom stuff
-from clean_data.utils.extract_values import extract_date_from_opening_date
+from clean_data.utils.extract_values import extract_date_from_opening_date, extract_time_from_running_time
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -128,22 +128,22 @@ map_dict = {
     "Never officially opened":True,
     "not announced":True
     }
+# Also include if Opening is NA
 df["Show Never Opened"] = np.where(df["Opening Info"].notna(), df["Opening Info"].map(map_dict), False)
-
+df["Show Never Opened"] = np.where(df["Opening"].notna(), df["Show Never Opened"], True)
 
 # ------------------------------------------------------------------------------
 
 # Clean up Intermissions
-
-
+# YB: Nikil has got this...
 
 
 # ------------------------------------------------------------------------------
+# This will eventually overwrite the previous values...
+df["Running Time New"] = df["Running Time"].apply(extract_time_from_running_time)
 
-# Clean up Running Time
-
-
-
+# How do we evaluate? (YB will take care of it...)
+# print(df[["Running Time", "Running Time New"]].dropna(how="all").head(50))
 
 # ------------------------------------------------------------------------------
 
