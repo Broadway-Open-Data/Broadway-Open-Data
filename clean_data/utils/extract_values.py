@@ -53,7 +53,7 @@ def extract_time_from_running_time(x):
 
 
     # These values are null
-    if not x or type(x)!=str:
+    if not x or type(x)!=str or x=="TBA":
         return None
 
     # This is the case for one show... it's 2 hours...

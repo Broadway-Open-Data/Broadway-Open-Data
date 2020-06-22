@@ -41,6 +41,9 @@ with open(curr_data_path,"r") as f:
 # Load to a dataframe
 df = pd.DataFrame.from_records(all_data)
 
+# Drop all columns ending with `_URL`
+drop_cols = df.columns[df.columns.str.endswith("_URL")]
+df.drop(columns=drop_cols, inplace=True)
 
 # Convert relevant datetime columns
 date_col = ["Opening", "Closing", "Previews"]
@@ -118,7 +121,6 @@ s = extract_date_from_opening_date(df["Opening Info"])
 # If use pandas method, this below gets messed up...
 df["Opening"] = np.where(df["Opening"].notna(), df["Opening"], s)
 
-
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
@@ -132,6 +134,9 @@ map_dict = {
 df["Show Never Opened"] = np.where(df["Opening Info"].notna(), df["Opening Info"].map(map_dict), False)
 df["Show Never Opened"] = np.where(df["Opening"].notna(), df["Show Never Opened"], True)
 
+# Now drop that column
+df.drop(columns=["Opening Info"], inplace=True)
+
 # ------------------------------------------------------------------------------
 
 # Clean up Intermissions
@@ -139,29 +144,47 @@ df["Show Never Opened"] = np.where(df["Opening"].notna(), df["Show Never Opened"
 
 
 # ------------------------------------------------------------------------------
-# This will eventually overwrite the previous values...
-df["Running Time New"] = df["Running Time"].apply(extract_time_from_running_time)
+# Clean up running time
+df["Running Time"] = df["Running Time"].apply(extract_time_from_running_time)
 
-# How do we evaluate? (YB will take care of it...)
-# print(df[["Running Time", "Running Time New"]].dropna(how="all").head(50))
 
 # ------------------------------------------------------------------------------
 
-# Clean up # Performances
+# Revival or Original?
+revival_dict = {
+    'Original Production': False,
+    'Revival': True,
+    'Premiere': False,
+    'Revised Production': False,
+    'Production': False,
+    'Concert': False,
+    'Concert Revival': True,
+    'Motion Picture': False
+    }
+df["Revival"] = df["Production Type"].map(revival_dict)
 
 
 
 # ------------------------------------------------------------------------------
 
 # Clean up Theatres
+def extract_version(x):
+    if not x or type(x)!=str:
+        return None
+    search_strings = ["pre-broadway","revival", "broadway"]
+    for y in search_strings:
+        if y in x.lower():
+            return y
+    # if nothing
+    return None
 
-
+# Not a meaningful column...
+df["Version"] = df["Version"].apply(extract_version)
 
 
 # ------------------------------------------------------------------------------
 
 # Save here when finished
-
 print(f"saving data for {len(df):,} records")
 
 # save_data_path = Path(os.path.join("data","all_show_info_cleaned.json"))
