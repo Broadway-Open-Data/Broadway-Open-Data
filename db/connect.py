@@ -1,22 +1,31 @@
+import os
+import json
+import sys
+
+# import pymysql
+# import mysql
 from sqlalchemy import create_engine
 import sqlalchemy
-import os
-# import mysql
-import pymysql
 
-drivername="mysql"
+sys.path.append(".")
+
+# get the credentials
+with open("secret/RSD_CREDENTIALS.json", "r") as f:
+    creds = json.load(f)
+    username = creds.get("RDS_USERNAME")
+    password = creds.get("RDS_PASSWORD")
+
+# Access the path and stuff
+drivername="mysql+pymysql"
 host = "open-broadway-data.cnti8o0ilvhg.us-east-1.rds.amazonaws.com"
 port = 3306
 dbname = "shows"
-dbInstanceIdentifier = "open-broadway-data"
-username = os.environ.get("RDS_USERNAME")
-password = os.environ.get("RDS_PASSWORD")
 
 
-print(password,"\n\n")
+# ===============================================================
 # make the url to be used for the sql engine
-engine_url = sqlalchemy.engine.url.URL(
-    drivername,
+connection_string = sqlalchemy.engine.url.URL(
+    drivername=drivername,
     username=username,
     password=password,
     host=host,
@@ -24,17 +33,8 @@ engine_url = sqlalchemy.engine.url.URL(
     database=dbname
     )
 
-engine = create_engine(engine_url)
+# Connect
+engine = create_engine(connection_string)
 
-# This isn't working...
-# conn = pymysql.connect(
-#     host=host,
-#     user=username,
-#     passwd=password,
-#     port=port,
-#     db=dbname,
-#     charset='utf8mb4',
-#     cursorclass=pymysql.cursors.DictCursor
-#     )
-#
-# cur = conn.cursor()
+# BINGO!
+print(engine.table_names())
