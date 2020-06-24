@@ -1,19 +1,18 @@
 import os
 import json
+import sqlalchemy
 import sys
 
-# import pymysql
-# import mysql
-from sqlalchemy import create_engine
-import sqlalchemy
-
+# set the path to the root
 sys.path.append(".")
 
+# ------------------------------------------------------------------------------
 # get the credentials
 with open("secret/RSD_CREDENTIALS.json", "r") as f:
     creds = json.load(f)
     username = creds.get("RDS_USERNAME")
     password = creds.get("RDS_PASSWORD")
+
 
 # Access the path and stuff
 drivername="mysql+pymysql"
@@ -22,7 +21,7 @@ port = 3306
 dbname = "shows"
 
 
-# ===============================================================
+# ------------------------------------------------------------------------------
 # make the url to be used for the sql engine
 connection_string = sqlalchemy.engine.url.URL(
     drivername=drivername,
@@ -32,9 +31,7 @@ connection_string = sqlalchemy.engine.url.URL(
     port=port,
     database=dbname
     )
-
-# Connect
-engine = create_engine(connection_string)
-
-# BINGO!
-print(engine.table_names())
+def get_db_uri():
+    """returns the uri for connecting to the db"""
+    return connection_string
+# ------------------------------------------------------------------------------
