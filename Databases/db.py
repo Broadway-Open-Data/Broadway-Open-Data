@@ -12,10 +12,10 @@ db = SQLAlchemy()
 class Show(db.Model):
     """"""
     __tablename__ = "shows"
-    id = db.Column(db.String(40), primary_key=True, nullable=False, default=lambda: str(uuid4()),unique=True, index=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, default=lambda: int(str(int(uuid.uuid4()))[:7]), unique=True, index=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
-    # add each field, manually
+    # the basics
     title = db.Column(db.String(150), nullable=True)
     opening_date =  db.Column(db.DateTime, nullable=True)
     closing_date =  db.Column(db.DateTime, nullable=True)
@@ -23,7 +23,7 @@ class Show(db.Model):
     year = db.Column(db.Integer, index=True, nullable=True)
 
     # theatre
-    theatre_id = db.Column(db.String(20), index=True, nullable=True)
+    theatre_id = db.Column(db.Integer, default=0, nullable=False)
     theatre_name = db.Column(db.String(40), index=False, nullable=True)
 
     # types
@@ -44,27 +44,79 @@ class Show(db.Model):
     repertory = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
 
     # Other stuff
-    other_titles = db.Column(db.String(150), nullable=True)
+    other_titles = db.Column(db.String(300), nullable=True)
     official_website = db.Column(db.String(40), nullable=True)
 
     def __str__(self):
         return json.dumps({
+
             "id":self.id,
             "date_instantiated":self.date_instantiated.strftime("%Y-%m-%d %H:%M:%s"),
+
+            # the basics:
+            "title":self.title,
+            "opening_date":self.opening_date.strftime("%Y-%m-%d"),
+            "closing_date":self.closing_date.strftime("%Y-%m-%d"),
+            "previews_date":self.previews_date.strftime("%Y-%m-%d"),
+            "year":self.year,
+
+            # theatre:
+            "theatre_id":self.theatre_id,
+            "theatre_name":self.theatre_name,
+
+            # types
+            "production_type":self.production_type,
+            "show_type":self.show_type,
+            "show_type_simple":self.show_type_simple,
+
+            # booleans
+            "show_never_opened":self.show_never_opened,
+            "revival":self.revival,
+            "pre_broadway":self.pre_broadway,
+            "limited_run":self.limited_run,
+            "repertory":self.repertory,
+
+            # Other stuff
+            "other_titles":self.other_titles,
+            "official_website":self.official_website,
         })
 
 
 class Theatre(db.Model):
     """"""
     __tablename__ = "theatres"
-    id = db.Column(db.String(50), primary_key=True, nullable=False, default=lambda: str(uuid4()),unique=True, index=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, default=0, unique=True, index=True)
     date_instantiated = db.Column(db.DateTime,  nullable=False, default=datetime.datetime.utcnow)
 
+    # the basics
+    theatre_name = db.Column(db.String(200), nullable=True)
+    street_address = db.Column(db.String(200), nullable=True)
+    address_locality = db.Column(db.String(100), nullable=True)
+    address_region = db.Column(db.String(100), nullable=True)
+    postal_code = db.Column(db.String(10), nullable=True)
+
+    # date stuff
+    year_closed = db.Column(db.Integer, nullable=True)
+    year_demolished = db.Column(db.Integer, nullable=True)
+    capacity = db.Column(db.Integer, nullable=True)
 
     def __str__(self):
         return json.dumps({
+
             "id":self.id,
             "date_instantiated":self.date_instantiated.strftime("%Y-%m-%d %H:%M:%s"),
+
+            # basics
+            "theatre_name":self.theatre_name,
+            "street_address":self.street_address,
+            "address_locality":self.address_locality,
+            "address_region":self.address_region,
+            "postal_code":self.postal_code,
+
+            # numbers
+            "year_closed":self.year_closed,
+            "year_demolished":self.year_demolished,
+            "capacity":self.capacity,
         })
 
 # class WebsiteMetaData(db.Model):
