@@ -12,8 +12,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from Databases.db import db , Show, Theatre
 from Databases.db_uri import get_db_uri
+from sqlalchemy.exc import IntegrityError
 
 import pandas as pd
+import numpy as np
 # ------------------------------------------------------------------------------
 
 
@@ -30,34 +32,38 @@ with app.app_context():
     # Now load the data
     df = pd.read_csv("data/all_show_info_cleaned.csv")
 
-    cols = ['Title', 'Opening Date', 'Theatre ID', 'Theatre Name (from Show Info)',
-       'Production Type', 'Intermissions', 'Show Type', 'Show ID', 'Year',
-       'Closing Date', 'N Performances', 'Other Titles', 'Previews Date',
-       'Running Time', 'Official Website', 'Show Type Simple',
-       'Show Never Opened', 'Run Time', 'Revival', 'Pre-Broadway',
-       'Limited Run', 'Repertory']
-
-    sql_cols = [column.key for column in Show.__table__.columns]
-    sql_cols = Show.__table__.columns.keys()
-
     # Match up these columns with each other...
-    cols = df.columns.str.lower().str.replace("-","_").str.replace(" ","_")
-    for x in cols:
-        if x not in sql_cols:
-            print(x)
-    # Then add them to the db!
-    # ['id', 'date_instantiated', 'title', 'opening_date', 'closing_date', 'previews_date', 'year', 'theatre_id', 'theatre_name', 'production_type', 'show_type', 'show_type_simple', 'intermissions', 'n_performances', 'running_time', 'show_never_opened', 'revival', 'pre_broadway', 'limited_run', 'repertory', 'other_titles', 'official_website']
+    cols_mapper = {x:x.lower().replace("-","_").replace(" ","_") for x in df.columns}
 
-    # print(cols)
-    # # Do these things now.. .
-    # now = datetime.datetime.utcnow()
-    #
-    # my_show = Show(
-    #     id=str(uuid.uuid4()),
-    #     date_instantiated=now,
-        # title=row.get("Title"),
-    # )
-    # db.session.add(my_show)
+    cols_mapper.update({
+        "Theatre Name (from Show Info)":"theatre_name",
+        "Show ID":"id",
+        "Running Time":"run_time"
+    })
+
+    bool_cols = ["Show Never Opened","Revival","Pre-Broadway","Limited Run","Repertory"]
+    df[bool_cols] = df[bool_cols].fillna(False)
+
+    # Fill na values
+    df = df.where((pd.notnull(df)), None)
+
+    # This can be used to reference the columns in the sql schema
+    # sql_cols = Show.__table__.columns.keys()
+
+    # Do these things now.. .
+    now = datetime.datetime.utcnow()
+
+    for idx, row in df.iterrows():
+
+        show_data = {v:row[k] for k,v in cols_mapper.items() }
+        show_data.update({"date_instantiated":now})
+
+        my_show = Show(**show_data)
+        db.session.add(my_show)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
     # del my_show
     #
     # my_theatre = Theatre(

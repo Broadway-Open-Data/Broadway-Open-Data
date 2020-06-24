@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
+from sqlalchemy.sql import expression
 
 from uuid import uuid4
 import datetime
@@ -12,39 +13,39 @@ class Show(db.Model):
     """"""
     __tablename__ = "shows"
     id = db.Column(db.String(40), primary_key=True, nullable=False, default=lambda: str(uuid4()),unique=True, index=True)
-    date_instantiated = db.Column(db.DateTime,  primary_key=False, nullable=False, default=datetime.datetime.utcnow)
+    date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     # add each field, manually
-    title = db.Column(db.String(40), primary_key=False, nullable=True)
-    opening_date =  db.Column(db.DateTime, primary_key=False, nullable=True)
-    closing_date =  db.Column(db.DateTime, primary_key=False, nullable=True)
-    previews_date =  db.Column(db.DateTime, primary_key=False, nullable=True)
-    year = db.Column(db.Integer, primary_key=False, nullable=True)
+    title = db.Column(db.String(150), nullable=True)
+    opening_date =  db.Column(db.DateTime, nullable=True)
+    closing_date =  db.Column(db.DateTime, nullable=True)
+    previews_date =  db.Column(db.DateTime, nullable=True)
+    year = db.Column(db.Integer, index=True, nullable=True)
 
     # theatre
-    theatre_id = db.Column(db.String(20), db.ForeignKey('theatres.id'), nullable=True)
-    theatre_name = db.Column(db.String(40), primary_key=False, nullable=True)
+    theatre_id = db.Column(db.String(20), index=True, nullable=True)
+    theatre_name = db.Column(db.String(40), index=False, nullable=True)
 
     # types
-    production_type = db.Column(db.String(20), primary_key=False, nullable=True)
-    show_type = db.Column(db.String(20), primary_key=False, nullable=True)
-    show_type_simple = db.Column(db.String(20), primary_key=False, nullable=True)
+    production_type = db.Column(db.String(20), nullable=True)
+    show_type = db.Column(db.String(20), nullable=True)
+    show_type_simple = db.Column(db.String(20), nullable=True)
 
     # numerics
-    intermissions = db.Column(db.Integer, primary_key=False, nullable=True)
-    n_performances = db.Column(db.Integer, primary_key=False, nullable=True)
-    running_time = db.Column(db.Integer, primary_key=False, nullable=True)
+    intermissions = db.Column(db.Integer, nullable=True)
+    n_performances = db.Column(db.Integer, nullable=True)
+    run_time = db.Column(db.Integer, nullable=True)
 
     # booleans
-    show_never_opened = db.Column(db.Boolean, primary_key=False, nullable=True)
-    revival = db.Column(db.Boolean, primary_key=False, nullable=True)
-    pre_broadway = db.Column(db.Boolean, primary_key=False, nullable=True)
-    limited_run = db.Column(db.Boolean, primary_key=False, nullable=True)
-    repertory = db.Column(db.Boolean, primary_key=False, nullable=True)
+    show_never_opened = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
+    revival = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
+    pre_broadway = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
+    limited_run = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
+    repertory = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
 
     # Other stuff
-    other_titles = db.Column(db.String(40), primary_key=False, nullable=True)
-    official_website = db.Column(db.String(40), primary_key=False, nullable=True)
+    other_titles = db.Column(db.String(150), nullable=True)
+    official_website = db.Column(db.String(40), nullable=True)
 
     def __str__(self):
         return json.dumps({
@@ -57,7 +58,7 @@ class Theatre(db.Model):
     """"""
     __tablename__ = "theatres"
     id = db.Column(db.String(50), primary_key=True, nullable=False, default=lambda: str(uuid4()),unique=True, index=True)
-    date_instantiated = db.Column(db.DateTime,  primary_key=False, nullable=False, default=datetime.datetime.utcnow)
+    date_instantiated = db.Column(db.DateTime,  nullable=False, default=datetime.datetime.utcnow)
 
 
     def __str__(self):
