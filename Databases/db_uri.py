@@ -16,9 +16,9 @@ with open("secret/RSD_CREDENTIALS.json", "r") as f:
 
 # Access the path and stuff
 drivername="mysql+pymysql"
-host = "open-broadway-data.cnti8o0ilvhg.us-east-1.rds.amazonaws.com"
+host = "open-broadway-data.cmftsskrmemn.us-east-1.rds.amazonaws.com"
 port = 3306
-dbname = "shows"
+dbname = "broadway"
 
 
 # ------------------------------------------------------------------------------
