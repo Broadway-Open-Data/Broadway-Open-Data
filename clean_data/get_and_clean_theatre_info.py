@@ -19,7 +19,7 @@ sys.path.append('.')
 # Import custom stuff
 from utils.web_scraping import make_smart_request
 from utils.string_manipulations import str_to_int, remove_special_chars
-from structure_content.utils.get_page_content import get_data_from_theatre_soup
+from structure_content.sc_utils.get_page_content import get_data_from_theatre_soup
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 # Load the current data

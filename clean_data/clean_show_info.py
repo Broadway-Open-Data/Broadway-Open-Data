@@ -15,13 +15,8 @@ from IPython.display import display
 from pathlib import Path
 sys.path.append('.')
 
-# Set pandas display options
-pd.options.display.max_rows = 100
-pd.options.display.max_columns = 150
-pd.options.display.width = 1500
-
 # Import custom stuff
-from clean_data.utils.extract_values import extract_date_from_opening_date, extract_time_from_running_time, extract_n_intermissions
+from clean_data.cd_utils.extract_values import extract_date_from_opening_date, extract_time_from_running_time, extract_n_intermissions
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 

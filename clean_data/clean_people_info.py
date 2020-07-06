@@ -13,13 +13,6 @@ from IPython.display import display
 from pathlib import Path
 sys.path.append('..')
 
-# Set pandas display options
-pd.options.display.max_rows = 20
-pd.options.display.max_columns = 150
-pd.options.display.width = 1500
-
-
-
 # Load the current data
 curr_data_path = Path(os.path.join("data","all_people_info.json"))
 
