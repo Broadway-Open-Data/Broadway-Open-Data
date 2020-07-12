@@ -10,9 +10,19 @@ venv
 *.xml
 *.iml
 
+# Ignore any notebooks
+.ipynb
+
 # Ignore secret! (if they exist)
 secret
 
 # Ignore data
 # data (Don't ignore for now...!)
 data (old)
+<<<<<<< HEAD
+=======
+old
+
+# Ignore migrations:
+migrations
+>>>>>>> 5ecee4a70fa16dfbfaeebe11adddf62b1874a07d
