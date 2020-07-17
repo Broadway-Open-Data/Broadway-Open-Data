@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+  <h1>Submit Data</h1>
+  <p class="important">
+    Fill it out manually.
+  </p>
+
+  <!-- Create a form -->
+  <form method="POST">
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+
+    <div class="form-group all-fields">
+
+    {{ form.allFields() }}
+    {{ form.submit() }}
+
+    </div>
+
+  </form>
+{% endblock %}

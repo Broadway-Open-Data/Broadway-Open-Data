@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+  <h1 style="color:green;">Success!</h1>
+
+  <h2>Data from the database:</h2>
+  <pre style="white-space: pre-wrap; font-size:11px;">
+  {{ data }}
+  </pre>
+  <hr>
+{% endblock %}
