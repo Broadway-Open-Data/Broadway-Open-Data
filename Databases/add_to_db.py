@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import datetime
 
-from Databases.db import db , Show, Theatre
+from databases.db import db , Show, Theatre
 from sqlalchemy.exc import IntegrityError
 
 # ------------------------------------------------------------------------------

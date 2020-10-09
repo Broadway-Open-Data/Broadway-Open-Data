@@ -7,9 +7,14 @@ import datetime
 import enum
 import json
 
+# import custom stuff
+from . import models
+
+# ------------------------------------------------------------------------------
+
 db = SQLAlchemy()
 
-class Show(db.Model):
+class Show(db.Model, models.dbTable):
     """"""
     __tablename__ = "shows"
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=lambda: int(str(int(uuid.uuid4()))[:7]), unique=True, index=True)
@@ -47,42 +52,9 @@ class Show(db.Model):
     other_titles = db.Column(db.String(300), nullable=True)
     official_website = db.Column(db.String(40), nullable=True)
 
-    def __str__(self):
-        return json.dumps({
-
-            "id":self.id,
-            "date_instantiated":self.date_instantiated.strftime("%Y-%m-%d %H:%M:%s"),
-
-            # the basics:
-            "title":self.title,
-            "opening_date":self.opening_date.strftime("%Y-%m-%d"),
-            "closing_date":self.closing_date.strftime("%Y-%m-%d"),
-            "previews_date":self.previews_date.strftime("%Y-%m-%d"),
-            "year":self.year,
-
-            # theatre:
-            "theatre_id":self.theatre_id,
-            "theatre_name":self.theatre_name,
-
-            # types
-            "production_type":self.production_type,
-            "show_type":self.show_type,
-            "show_type_simple":self.show_type_simple,
-
-            # booleans
-            "show_never_opened":self.show_never_opened,
-            "revival":self.revival,
-            "pre_broadway":self.pre_broadway,
-            "limited_run":self.limited_run,
-            "repertory":self.repertory,
-
-            # Other stuff
-            "other_titles":self.other_titles,
-            "official_website":self.official_website,
-        })
 
 
-class Theatre(db.Model):
+class Theatre(db.Model, models.dbTable):
     """"""
     __tablename__ = "theatres"
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=0, unique=True, index=True)
@@ -100,24 +72,8 @@ class Theatre(db.Model):
     year_demolished = db.Column(db.Integer, nullable=True)
     capacity = db.Column(db.Integer, nullable=True)
 
-    def __str__(self):
-        return json.dumps({
 
-            "id":self.id,
-            "date_instantiated":self.date_instantiated.strftime("%Y-%m-%d %H:%M:%s"),
-
-            # basics
-            "theatre_name":self.theatre_name,
-            "street_address":self.street_address,
-            "address_locality":self.address_locality,
-            "address_region":self.address_region,
-            "postal_code":self.postal_code,
-
-            # numbers
-            "year_closed":self.year_closed,
-            "year_demolished":self.year_demolished,
-            "capacity":self.capacity,
-        })
+    
 
 # class WebsiteMetaData(db.Model):
 #     """"""

@@ -11,8 +11,8 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 # db things
-from Databases.db import db
-from Databases.db_uri import get_db_uri
+from databases.db import db
+from databases.db_uri import get_db_uri
 
 
 # ------------------------------------------------------------------------------

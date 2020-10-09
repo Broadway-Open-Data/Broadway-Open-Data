@@ -9,15 +9,14 @@ sys.path.append(".")
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from Databases.db import db , Show, Theatre
-from Databases.db_uri import get_db_uri
+from databases.db import db , Show, Theatre
+from databases.db_uri import get_db_uri
 
 import pandas as pd
 import numpy as np
 
 # custom stuff
-from Databases.add_to_db import add_shows, query_all_shows, add_theatres
+from databases.add_to_db import add_shows, query_all_shows, add_theatres
 # ------------------------------------------------------------------------------
 
 
@@ -26,21 +25,39 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-with app.app_context():
-    db.create_all()
-
-    # If you want to query all the show ids...
-    all_show_ids = query_all_shows(db)
-
-    # ------------------------------------------------------------------------------
-
-    # Add shows
-    add_shows(db)
-
-    # ------------------------------------------------------------------------------
-
-    # Add theatres
-    add_theatres(db)
 
 
-print("*****\nDONE! All data is living in the database.\n*****")
+def do_all():
+
+    with app.app_context():
+        # Don't need this...
+        # db.create_all()
+
+        task_1 = False # manually toggle for now
+        if task_1:
+
+            # If you want to query all the show ids...
+            all_show_ids = query_all_shows(db)
+
+            # ------------------------------------------------------------------------------
+
+            # Add shows
+            add_shows(db)
+
+            # ------------------------------------------------------------------------------
+
+            # Add theatres
+            add_theatres(db)
+
+
+            print("*****\nDONE! All data is living in the database.\n*****")
+
+        task_2 = True # manually toggle for now
+        if task_2:
+            my_show = Show.get_by_id(3)
+            print(my_show)
+
+
+
+if __name__ =='__main__':
+    do_all()
