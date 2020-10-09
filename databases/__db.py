@@ -1,4 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
+
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import expression
 
@@ -8,69 +8,10 @@ import enum
 import json
 
 # import custom stuff
+from . import db
 from . import models
 
 # ------------------------------------------------------------------------------
-
-db = SQLAlchemy()
-
-class Show(db.Model, models.dbTable):
-    """"""
-    __tablename__ = "shows"
-    id = db.Column(db.Integer, primary_key=True, nullable=False, default=lambda: int(str(int(uuid.uuid4()))[:7]), unique=True, index=True)
-    date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-
-    # the basics
-    title = db.Column(db.String(150), nullable=True)
-    opening_date =  db.Column(db.DateTime, nullable=True)
-    closing_date =  db.Column(db.DateTime, nullable=True)
-    previews_date =  db.Column(db.DateTime, nullable=True)
-    year = db.Column(db.Integer, index=True, nullable=True)
-
-    # theatre
-    theatre_id = db.Column(db.Integer, default=0, nullable=False)
-    theatre_name = db.Column(db.String(40), index=False, nullable=True)
-
-    # types
-    production_type = db.Column(db.String(20), nullable=True)
-    show_type = db.Column(db.String(20), nullable=True)
-    show_type_simple = db.Column(db.String(20), nullable=True)
-
-    # numerics
-    intermissions = db.Column(db.Integer, nullable=True)
-    n_performances = db.Column(db.Integer, nullable=True)
-    run_time = db.Column(db.Integer, nullable=True)
-
-    # booleans
-    show_never_opened = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
-    revival = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
-    pre_broadway = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
-    limited_run = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
-    repertory = db.Column(db.Boolean, server_default=expression.true(), nullable=False)
-
-    # Other stuff
-    other_titles = db.Column(db.String(300), nullable=True)
-    official_website = db.Column(db.String(40), nullable=True)
-
-
-
-class Theatre(db.Model, models.dbTable):
-    """"""
-    __tablename__ = "theatres"
-    id = db.Column(db.Integer, primary_key=True, nullable=False, default=0, unique=True, index=True)
-    date_instantiated = db.Column(db.DateTime,  nullable=False, default=datetime.datetime.utcnow)
-
-    # the basics
-    theatre_name = db.Column(db.String(200), nullable=True)
-    street_address = db.Column(db.String(200), nullable=True)
-    address_locality = db.Column(db.String(100), nullable=True)
-    address_region = db.Column(db.String(100), nullable=True)
-    postal_code = db.Column(db.String(10), nullable=True)
-
-    # date stuff
-    year_closed = db.Column(db.Integer, nullable=True)
-    year_demolished = db.Column(db.Integer, nullable=True)
-    capacity = db.Column(db.Integer, nullable=True)
 
 
 

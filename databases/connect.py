@@ -6,12 +6,16 @@ import uuid
 # Correct the path
 sys.path.append(".")
 
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from databases.db import db , Show, Theatre
+# Internal stuff
+from databases import db
+from .models import Show, Theatre
 from databases.db_uri import get_db_uri
 
+# Flask stuff
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+# Data tools
 import pandas as pd
 import numpy as np
 
