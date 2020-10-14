@@ -1,10 +1,9 @@
 from databases import db, models
+
 import datetime
+
 from sqlalchemy.orm import validates, relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property
-# from sqlalchemy.sql import expression
-# import enum
-# import json
 
 # import custom stuff
 
@@ -116,18 +115,6 @@ class Person(db.Model, models.dbTable):
     def full_name(self):
         return " ".join(list(filter(None, [self.f_name, self.m_name, self.l_name])))
 
-    # full_name = db.column_property(" ".join(list(filter(None, [f_name, m_name, l_name]))))
-    # full_name = column_property(f_name + ' ' + m_name + ' ' + l_name)
-
-    # full_name = column_property(
-    #     select([f_name, m_name, l_name]).isnot(None) #where(path_table.c.id==Dr.id)
-    #     # select(f_name, m_name, l_name)
-    # )
-
-
-
-
-    # full_name = db.Column(db.String(120), nullable=False, unique=False)
 
     #  Date of birth (or something blurred).
     date_of_birth = db.Column(db.DateTime, nullable=True)
@@ -135,8 +122,12 @@ class Person(db.Model, models.dbTable):
     # one to many
     roles = db.relationship('Role', secondary=roles_table, backref=db.backref('person', lazy='dynamic'))
 
+    # --------------------------------------------------------------------------
+    # Here's where I need help with...
     # 1:1 relationship – Have to figure this out later...
     # gender_identity = db.Column(db.String, db.ForeignKey('gender_identity.id'))
+
+    # --------------------------------------------------------------------------
 
     # one to many
     racial_identity = db.relationship('RacialIdentity', secondary=race_table, backref=db.backref('person', lazy='dynamic'))
