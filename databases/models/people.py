@@ -125,7 +125,7 @@ class Person(db.Model, models.dbTable):
     # --------------------------------------------------------------------------
     # Here's where I need help with...
     # 1:1 relationship – Have to figure this out later...
-    gender_identity = db.Column(db.String, nullable=False, db.ForeignKey('gender_identity.id'))
+    gender_identity_id = db.Column(db.Integer, db.ForeignKey('gender_identity.id'))
 
     # --------------------------------------------------------------------------
 
