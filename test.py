@@ -6,5 +6,5 @@ x = models.Person(
     l_name="Buckley"
 )
 
-
+print(x.gender_identity)
 print("*"+x.full_name+"*")

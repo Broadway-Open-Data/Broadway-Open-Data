@@ -1,5 +1,8 @@
 from databases import db, models
 from sqlalchemy.sql import expression
+from sqlalchemy.orm import validates, relationship, backref
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from uuid import uuid4
 import datetime
 
@@ -43,3 +46,8 @@ class Show(db.Model, models.dbTable):
     # Other stuff
     other_titles = db.Column(db.String(300), nullable=True)
     official_website = db.Column(db.String(40), nullable=True)
+
+    # relationships – build this later...
+    # @hybrid_property
+    # def people(self):
+    #     return models.ShowsRolesLink.query.filter(show_id=self.id).all()

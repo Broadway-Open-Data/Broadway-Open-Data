@@ -10,13 +10,26 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 
 
-
 # --------------------------------------------------------------------------------
 
+
+
+class ShowsRolesLink(db.Model):
+    __tablename__ = 'shows_roles_link'
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
+    show_id = db.Column(db.Integer, db.ForeignKey('shows.id'), primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
+    extra_data = db.Column(db.String(256))
+
+
+
+
+
+# I might not need this association table...
 # A table for person, shows, and roles
-roles_table = db.Table('roles_table',
-        db.Column('person_id', db.Integer(), db.ForeignKey('person.id')),
-        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+# roles_table = db.Table('roles_table',
+#         db.Column('person_id', db.Integer(), db.ForeignKey('person.id')),
+#         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 
 class Role(db.Model, models.dbTable):
@@ -45,7 +58,7 @@ class Role(db.Model, models.dbTable):
 
 # --------------------------------------------------------------------------------
 
-race_table = db.Table('race_table',
+race_table = db.Table('racial_identity_lookup_table',
         db.Column('person_id', db.Integer(), db.ForeignKey('person.id')),
         db.Column('racial_identity_id', db.Integer(), db.ForeignKey('racial_identity.id')))
 
@@ -123,14 +136,16 @@ class Person(db.Model, models.dbTable):
     # Here's where I need help with...
     # 1:1 relationship – Have to figure this out later...
     gender_identity_id = db.Column(db.Integer, db.ForeignKey('gender_identity.id'))
-    gender_identity = db.relationship("GenderIdentity", backref="person")
+    gender_identity = db.relationship('GenderIdentity', backref="person")
 
     # --------------------------------------------------------------------------
 
     # one to many
-    roles = db.relationship('Role', secondary=roles_table, backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
+    # roles = db.relationship('Role', secondary=roles_table, backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
+    roles = relationship('Role', secondary='shows_roles_link', backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
+    shows = relationship('Show', secondary='shows_roles_link', backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
 
-    racial_identity = db.relationship('RacialIdentity', secondary=race_table, backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
+    racial_identity = db.relationship('RacialIdentity', secondary='racial_identity_lookup_table', backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
 
 
     # Additional fields
