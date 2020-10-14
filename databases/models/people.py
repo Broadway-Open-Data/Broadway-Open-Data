@@ -1,6 +1,7 @@
 from databases import db, models
 import datetime
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import validates, relationship, backref
+from sqlalchemy.ext.hybrid import hybrid_property
 # from sqlalchemy.sql import expression
 # import enum
 # import json
@@ -28,10 +29,19 @@ class Role(db.Model, models.dbTable):
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     date_last_edited = db.Column(db.DateTime, nullable=True)
 
+    # Assert is lowercase
+    @validates('name')
+    def convert_lower(self, key, value):
+        return value.lower()
+
+    # Methods
     @classmethod
     def get_by_name(self, name):
         """Get the id, name, description of a role based on the role name"""
         return self.query.filter_by(name=name).first()
+
+
+
 
 
 # --------------------------------------------------------------------------------
@@ -50,6 +60,12 @@ class RacialIdentity(db.Model, models.dbTable):
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     date_last_edited = db.Column(db.DateTime, nullable=True)
 
+    # Assert is lowercase
+    @validates('name')
+    def convert_lower(self, key, value):
+        return value.lower()
+
+    # Methods
     @classmethod
     def get_by_name(self, name):
         """Get the id, name, description of a role based on the role name"""
@@ -67,6 +83,12 @@ class GenderIdentity(db.Model, models.dbTable):
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     date_last_edited = db.Column(db.DateTime, nullable=True)
 
+    # Assert is lowercase
+    @validates('name')
+    def convert_lower(self, key, value):
+        return value.lower()
+
+    # Methods
     @classmethod
     def get_by_name(self, name):
         """Get the id, name, description of a role based on the role name"""
@@ -89,7 +111,23 @@ class Person(db.Model, models.dbTable):
     f_name = db.Column(db.String(40), nullable=False, unique=False)
     m_name = db.Column(db.String(40), nullable=True, unique=False)
     l_name = db.Column(db.String(40), nullable=False, unique=False)
-    full_name = db.Column(db.String(120), nullable=False, unique=False)
+
+    @hybrid_property
+    def full_name(self):
+        return " ".join(list(filter(None, [self.f_name, self.m_name, self.l_name])))
+
+    # full_name = db.column_property(" ".join(list(filter(None, [f_name, m_name, l_name]))))
+    # full_name = column_property(f_name + ' ' + m_name + ' ' + l_name)
+
+    # full_name = column_property(
+    #     select([f_name, m_name, l_name]).isnot(None) #where(path_table.c.id==Dr.id)
+    #     # select(f_name, m_name, l_name)
+    # )
+
+
+
+
+    # full_name = db.Column(db.String(120), nullable=False, unique=False)
 
     #  Date of birth (or something blurred).
     date_of_birth = db.Column(db.DateTime, nullable=True)
@@ -102,3 +140,25 @@ class Person(db.Model, models.dbTable):
 
     # one to many
     racial_identity = db.relationship('RacialIdentity', secondary=race_table, backref=db.backref('person', lazy='dynamic'))
+
+
+    # Additional fields
+    country_of_birth = db.Column(db.String(40), nullable=True, unique=False)
+    first_language = db.Column(db.String(40), nullable=True, unique=False)
+
+
+    # Assert is lowercase
+    @validates('f_name', 'm_name', 'l_name', 'full_name')
+    def convert_lower(self, key, value):
+        return value.lower()
+
+    # Methods
+
+
+
+
+
+
+
+
+#
