@@ -7,5 +7,4 @@ x = models.Person(
 )
 
 
-
 print("*"+x.full_name+"*")

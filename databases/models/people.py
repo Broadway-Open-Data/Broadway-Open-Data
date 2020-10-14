@@ -13,7 +13,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 # --------------------------------------------------------------------------------
 
-# Create roles
+# A table for person, shows, and roles
 roles_table = db.Table('roles_table',
         db.Column('person_id', db.Integer(), db.ForeignKey('person.id')),
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
@@ -25,8 +25,8 @@ class Role(db.Model, models.dbTable):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
+    # models
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    date_last_edited = db.Column(db.DateTime, nullable=True)
 
     # Assert is lowercase
     @validates('name')
@@ -57,7 +57,6 @@ class RacialIdentity(db.Model, models.dbTable):
     description = db.Column(db.String(255))
 
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    date_last_edited = db.Column(db.DateTime, nullable=True)
 
     # Assert is lowercase
     @validates('name')
@@ -80,7 +79,6 @@ class GenderIdentity(db.Model, models.dbTable):
     description = db.Column(db.String(255))
 
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    date_last_edited = db.Column(db.DateTime, nullable=True)
 
     # Assert is lowercase
     @validates('name')
@@ -119,8 +117,7 @@ class Person(db.Model, models.dbTable):
     #  Date of birth (or something blurred).
     date_of_birth = db.Column(db.DateTime, nullable=True)
 
-    # one to many
-    roles = db.relationship('Role', secondary=roles_table, backref=db.backref('person', lazy='dynamic'))
+
 
     # --------------------------------------------------------------------------
     # Here's where I need help with...
@@ -131,7 +128,9 @@ class Person(db.Model, models.dbTable):
     # --------------------------------------------------------------------------
 
     # one to many
-    racial_identity = db.relationship('RacialIdentity', secondary=race_table, backref=db.backref('person', lazy='dynamic'))
+    roles = db.relationship('Role', secondary=roles_table, backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
+
+    racial_identity = db.relationship('RacialIdentity', secondary=race_table, backref=db.backref('person', lazy='dynamic'), passive_deletes=True)
 
 
     # Additional fields
@@ -145,6 +144,10 @@ class Person(db.Model, models.dbTable):
         return value.lower()
 
     # Methods
+
+
+
+
 
 
 
