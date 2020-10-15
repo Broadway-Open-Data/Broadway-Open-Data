@@ -26,11 +26,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 with app.app_context():
+
     # Get a show and update it...
+
     x = models.Show().query.order_by('opening_date').first()
 
-    # print(x)
     # update the value
-    new_website = 'http://https//americanutopiabroadway.com'
+    new_website = 'http://https//americanutopiabroadway.com/'
+    update_dict = {'official_website':new_website}
     x.update_info({'official_website':new_website})
+
+
     # print(x)
