@@ -51,11 +51,7 @@ df_name = df['name'].apply(slice_full_name).apply(pd.Series).add_prefix("name_")
 df_clean = pd.concat([df, df_name], axis=1, join='inner')
 
 
-# zz =df['name'][z>3]
-
-
-# Need to clean this up. Not sure exactly how just yet...
-# I can go through and get all the people
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 keep_cols = [x for x in df_clean.columns if 'name' in x]
 df_names_only = df_clean.groupby('name', as_index=False).first()[keep_cols]
