@@ -27,6 +27,9 @@ with open(curr_data_path,"r") as f:
 # Load to a dataframe
 df = pd.DataFrame.from_records(all_data)
 
+# Drop no namers
+df = df[df['name']!='']
+
 # Numeric cols
 num_cols = ["show_id","year"]
 for col in num_cols:
@@ -34,6 +37,20 @@ for col in num_cols:
 
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 # Need to clean this up. Not sure exactly how just yet...
+# I can go through and get all the people
+
+df_names_only = df.groupby('name', as_index=False)['name_URL'].first()
+df_names_only.to_csv('data/all_people_name_url_only.csv', index=False)
+
+
+# Now, replace the name_URL
+df_clean = df.drop(columns=['name_URL']).merge(df_names_only, on='name', how='left')
+df_clean.to_csv('data/all_people_name_and_roles.csv', index=False)
+
+
+# Next step --> Add the people to the db. Then --> add each person's roles... (Hopefully will associate with each show appropriately...)
+
+df.head(10)
 
 
 # ------------------------------------------------------------------------------
