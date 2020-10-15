@@ -35,9 +35,10 @@ class ShowsRolesLink(db.Model):
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(40), unique=True)
-    type = db.Column(db.String(40), unique=False)
-    description = db.Column(db.String(255))
+    name = db.Column(db.String(40), unique=True, nullable=False)
+    type = db.Column(db.String(40), unique=False, nullable=True)
+    url = db.Column(db.String(120), unique=False, nullable=True)
+    description = db.Column(db.String(255), unique=False, nullable=True)
 
     # models
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
@@ -127,7 +128,7 @@ class Person(db.Model, models.dbTable):
     def full_name(self):
         return " ".join(list(filter(None, [self.f_name, self.m_name, self.l_name])))
 
-
+    url = db.Column(db.String(120), unique=False, nullable=True)
     #  Date of birth (or something blurred).
     date_of_birth = db.Column(db.DateTime, nullable=True)
 
