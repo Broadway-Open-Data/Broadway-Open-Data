@@ -44,13 +44,12 @@ for col in num_cols:
 
 @lru_cache
 def slice_full_name(name):
-    return HumanName(name)
+    return HumanName(name).as_dict()
 
+# Takes about 3 minutes + 10 seconds...
+df_name = df['name'].apply(slice_full_name).apply(pd.Series).add_prefix("name_")
+df_clean = pd.concat([df, df_name], axis=1, join='inner')
 
-
-# Takes 20 seconds w/o cache
-# Takes 18.4 seconds with cache
-z = df['name'].apply(slice_full_name)
 
 # zz =df['name'][z>3]
 
@@ -58,23 +57,17 @@ z = df['name'].apply(slice_full_name)
 # Need to clean this up. Not sure exactly how just yet...
 # I can go through and get all the people
 
-df_names_only = df.groupby('name', as_index=False)['name_URL'].first()
+keep_cols = [x for x in df_clean.columns if 'name' in x]
+df_names_only = df_clean.groupby('name', as_index=False).first()[keep_cols]
 df_names_only.to_csv('data/all_people_name_url_only.csv', index=False)
 
 
-# Now, replace the name_URL
-df_clean = df.drop(columns=['name_URL']).merge(df_names_only, on='name', how='left')
-df_clean.to_csv('data/all_people_name_and_roles.csv', index=False)
-
-
-# Next step --> Add the people to the db. Then --> add each person's roles... (Hopefully will associate with each show appropriately...)
-
-df.head(10)
+# Clean it up – in case there are mispellings or whatever...
+drop_cols = [x for x in df_clean.columns if 'name_' in x]
+df_clean_2 = df_clean.drop(columns=drop_cols).merge(df_names_only, on='name', how='left')
+df_clean_2.to_csv('data/all_people_name_and_roles.csv', index=False)
 
 
 # ------------------------------------------------------------------------------
 # Save here when finished
-# print(f"saving data for {len(df):,} records")
-
-# save_data_path = Path(os.path.join("data","all_people_info_cleaned.json"))
-# df.to_json(save_data_path, orient="records")
+print(f"saving data for {len(df_clean_2):,} records")
