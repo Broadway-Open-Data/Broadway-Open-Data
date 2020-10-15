@@ -28,9 +28,9 @@ db.init_app(app)
 with app.app_context():
 
     # Get a show and update it...
-    x = models.Show.query.filter_by(id = 333088).order_by(models.Show.opening_date.desc()).first()
+    x = models.Show.query.filter_by(id = 333086).order_by(models.Show.opening_date.desc()).first()
 
     # update the value
-    new_website = 'https://virginiawoolfonbroadway.com'
+    new_website = 'https://inresidenceonbroadway.com/'
     update_dict = {'official_website':new_website}
     x.update_info(update_dict={'official_website':new_website})
