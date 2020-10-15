@@ -35,7 +35,8 @@ class ShowsRolesLink(db.Model):
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True)
+    name = db.Column(db.String(40), unique=True)
+    type = db.Column(db.String(40), unique=False)
     description = db.Column(db.String(255))
 
     # models
