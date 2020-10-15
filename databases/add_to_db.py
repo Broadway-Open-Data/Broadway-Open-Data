@@ -144,6 +144,26 @@ def add_theatres(db):
     del df
     print("theatres complete")
 
+
+
+
+def add_people(db):
+    """
+    Add all shows to the db
+    """
+
+    # Get all existing show id's
+    # Now load the data for theatres
+    df = pd.read_json("data/all_people_info.json")
+
+    # Continue here...
+    
+    # set df type
+    # df["Theatre ID"] = df["Theatre ID"].fillna(0).astype(int)
+
+
+
+
 # if __name__=='__main__':
 #     add_shows(db)
 #     add_theatres(db)
