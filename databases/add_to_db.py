@@ -6,7 +6,7 @@ import pandas as pd
 import datetime
 
 from databases import db
-from databases.models import Show, Theatre
+from databases.models import Show, Theatre, Person
 from sqlalchemy.exc import IntegrityError
 
 # ------------------------------------------------------------------------------
@@ -157,9 +157,21 @@ def add_people(db):
     df = pd.read_json("data/all_people_info.json")
 
     # Continue here...
-    
+
+    for idx, row in df.iterrows():
+        my_person = Person(
+                f_name="",
+                m_name="",
+                l_name="",
+                url=url,
+        )
+
     # set df type
     # df["Theatre ID"] = df["Theatre ID"].fillna(0).astype(int)
+
+
+
+
 
 
 

@@ -6,7 +6,7 @@ from sqlalchemy.orm import validates, relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property
 
 # import custom stuff
-
+from nameparser import HumanName
 
 
 
@@ -120,13 +120,21 @@ class Person(db.Model, models.dbTable):
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
 
+    name_title =  db.Column(db.String(10), nullable=True, unique=False)
     f_name = db.Column(db.String(40), nullable=False, unique=False)
     m_name = db.Column(db.String(40), nullable=True, unique=False)
     l_name = db.Column(db.String(40), nullable=False, unique=False)
+    name_suffix = db.Column(db.String(10), nullable=True, unique=False)
+    name_nickname = db.Column(db.String(40), nullable=True, unique=False)
 
     @hybrid_property
     def full_name(self):
-        return " ".join(list(filter(None, [self.f_name, self.m_name, self.l_name])))
+        """Return proper casing too"""
+        name_string = " ".join(list(filter(None, [self.name_title, self.f_name, self.m_name, self.l_name, self.name_suffix, self.name_nickname])))
+        full_name = HumanName(name_string)
+        full_name.capitalize()
+        return full_name
+
 
     url = db.Column(db.String(120), unique=False, nullable=True)
     #  Date of birth (or something blurred).
