@@ -101,6 +101,7 @@ class dbTable():
                 approved_by=approved_by,
                 approved_comment=approved_comment,
                 table_name=table_name,
+                value_primary_id=self.id,
                 field = key,
                 field_type = str(self.find_type(key)),
                 value_pre = _data[key],

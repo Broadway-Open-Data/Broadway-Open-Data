@@ -18,9 +18,10 @@ class DataEdits(db.Model, models.dbTable):
 
     # edit details
     table_name = db.Column(db.String(80), nullable=False, unique=False)
+    value_primary_id = db.Column(db.Integer, nullable=False, unique=False) # This is the row referred to in the edit..
+
     field = db.Column(db.String(40), nullable=False, unique=False)
     field_type = db.Column(db.String(40), default="VARCHAR(40)", nullable=False, unique=False)
-    value_primary_id = db.Column(db.Integer, nullable=False, unique=False) # This is the row referred to in the edit..
     value_pre = db.Column(db.String(300), nullable=True, unique=False)
     value_post = db.Column(db.String(300), nullable=False, unique=False)
 
