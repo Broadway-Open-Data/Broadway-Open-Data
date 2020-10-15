@@ -51,3 +51,19 @@ class Show(db.Model, models.dbTable):
     # @hybrid_property
     # def people(self):
     #     return models.ShowsRolesLink.query.filter(show_id=self.id).all()
+
+from sqlalchemy import event
+@event.listens_for(Show, 'before_update')
+def before_update(mapper, connection, target):
+    state = db.inspect(target)
+    changes = {}
+    print("foo")
+    # for attr in state.attrs:
+    #     hist = attr.load_history()
+    #
+    #     if not hist.has_changes():
+    #         continue
+    #
+    #     # hist.deleted holds old value
+    #     # hist.added holds new value
+    #     changes[attr.key] = hist.added

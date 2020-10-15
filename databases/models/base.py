@@ -1,5 +1,4 @@
 from databases import db
-from sqlalchemy.event import listens_for
 import json
 
 
@@ -42,12 +41,33 @@ class dbTable():
         return json.dumps(data, default=str)
 
 
+    # @classmethod
+    # @event.listens_for(cls, 'before_update')
+    # def before_udpate(mapper, connection, target):
+    #     state = db.inspect(target)
+    #     changes = {}
+    #
+    #     print(f"{mapper=}\n")
+    #     print(f"{connection=}\n")
+    #     print(f"{target=}\n")
 
-@listens_for(dbTable, "before_update")
-def timestamp_init(mapper, connection, target):
-    print(f"{mapper=}\n")
-    print(f"{connection=}\n")
-    print(f"{target=}\n")
+
+    # def after_insert(mapper, connection, target):
+    #     #do some stuff
+    #     print(f"{mapper=}\n")
+    #     print(f"{connection=}\n")
+    #     print(f"{target=}\n")
+    #
+    # @classmethod
+    # def __declare_last__(cls):
+    #     event.listen(cls, "after_insert", cls.after_insert)
+
+
+# @listens_for(dbTable, "before_flush")
+# def timestamp_init(mapper, connection, target):
+#     print(f"{mapper=}\n")
+#     print(f"{connection=}\n")
+#     print(f"{target=}\n")
 
 
 # @event.listens_for(dbTable, 'before_update')
