@@ -28,7 +28,7 @@ db.init_app(app)
 with app.app_context():
 
     # Get a show and update it...
-    x = models.Show.query.filter_by(title = "Who's Afraid of Virginia Woolf?").order_by(models.Show.opening_date.desc()).first()
+    x = models.Show.query.filter_by(id = 333088).order_by(models.Show.opening_date.desc()).first()
 
     # update the value
     new_website = 'https://virginiawoolfonbroadway.com'
