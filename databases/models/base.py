@@ -1,3 +1,5 @@
+from databases import db
+from sqlalchemy.event import listens_for
 import json
 
 
@@ -38,3 +40,31 @@ class dbTable():
     def __str__(self):
         data = self.__data__()
         return json.dumps(data, default=str)
+
+
+
+@listens_for(dbTable, "before_update")
+def timestamp_init(mapper, connection, target):
+    print(f"{mapper=}\n")
+    print(f"{connection=}\n")
+    print(f"{target=}\n")
+
+
+# @event.listens_for(dbTable, 'before_update')
+# def before_update(mapper, connection, target):
+
+
+    # state = db.inspect(target)
+    # changes = {}
+    #
+    # for attr in state.attrs:
+    #     hist = attr.load_history()
+    #
+    #     if not hist.has_changes():
+    #         continue
+    #
+    #     # hist.deleted holds old value
+    #     # hist.added holds new value
+    #     changes[attr.key] = hist.added
+    #
+    # # now changes map keys to new values

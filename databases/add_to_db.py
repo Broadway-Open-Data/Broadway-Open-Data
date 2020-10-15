@@ -1,9 +1,12 @@
+import sys
+sys.path.append(".")
+
 import numpy as np
 import pandas as pd
 import datetime
 
-from . import db
-from databases.db import Show, Theatre
+from databases import db
+from databases.models import Show, Theatre
 from sqlalchemy.exc import IntegrityError
 
 # ------------------------------------------------------------------------------
@@ -140,3 +143,7 @@ def add_theatres(db):
     # delete what you don't need
     del df
     print("theatres complete")
+
+# if __name__=='__main__':
+#     add_shows(db)
+#     add_theatres(db)
