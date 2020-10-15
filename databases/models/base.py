@@ -26,9 +26,9 @@ class dbTable():
         db.session.commit()
 
     # Udate info
-    def update_info(self, update_dict):
-        self.before_update(update_dict)
-        self.query.filter_by(id=self.id).update(update_dict, synchronize_session=False)
+    def update_info(self, **kwargs):
+        self.before_update(**kwargs)
+        self.query.filter_by(id=self.id).update(kwargs.get('update_dict'), synchronize_session=False)
         self.save_to_db()
 
 
@@ -53,27 +53,29 @@ class dbTable():
 
 
     # @classmethod
-    def before_update(self, update_dict):
+    def before_update(self, **kwargs):
 
         # Consult this to get the column dtypes?
         # state = db.inspect(self)
 
 
+        # Get edit meta info
         edit_date = datetime.datetime.utcnow()
-        # Get the edit id
-        edit_id = db.session.query(models.DataEdits.edit_id).order_by(-models.DataEdits.edit_id.desc()).first()
+        edit_id = db.session.query(models.DataEdits.edit_id).order_by(-models.DataEdits.edit_id.asc()).first()
 
-        # autoincrement
+        # Unpack the tuple to a result
         if edit_id:
-            edit_id +=1
+            edit_id = edit_id[0] + 1
         else:
             edit_id = 1
 
+
         # Who made the edit ? – This will have to be built as a wrapper I guess...
-        edit_by = '__obd_application__'
-        approved = True
-        approved_by = '__obd_application__'
-        approved_comment = 'Automated edit made through the open broadway data backend interface.'
+        edit_by = kwargs.get('edit_by', '__obd_application__')
+        edit_comment = kwargs.get('edit_comment', 'Automated edit made through the open broadway data backend interface.')
+        approved =  kwargs.get('approved', True)
+        approved_by = kwargs.get('approved_by', '__obd_application__')
+        approved_comment = kwargs.get('approved_comment', 'Automated edit made through the open broadway data backend interface.')
 
         # Get reference stuff
         table_name = self.__tablename__
@@ -81,48 +83,32 @@ class dbTable():
         # Get the data
         _data = self.__data__()
 
-        for key, value in update_dict.items():
+
+        for key, value in kwargs.get('update_dict').items():
+
+            # If no edit, then don't store
+            if _data[key] == value:
+                # No edit
+                print("no edit needed")
+                continue
+
             my_edit = models.DataEdits(
                 edit_date=edit_date,
                 edit_id=edit_id,
                 edit_by=edit_by,
+                edit_comment=edit_comment,
                 approved=approved,
                 approved_by=approved_by,
                 approved_comment=approved_comment,
                 table_name=table_name,
                 field = key,
-                field_type = self.find_type(key),
+                field_type = str(self.find_type(key)),
                 value_pre = _data[key],
                 value_post = value
             )
-            print(my_edit)
+            my_edit.save_to_db()
 
 
-
-
-
-
-# id = db.Column(db.Integer, primary_key=True)
-# # can be used to groupby...
-# edit_id = db.Column(db.Integer, nullable=False, unique=False)
-# edit_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-#
-# # edit details
-# table_name = db.Column(db.String(80), nullable=False, unique=False)
-# field = db.Column(db.String(40), nullable=False, unique=False)
-# field_type = db.Column(db.String(40), default="VARCHAR(40)", nullable=False, unique=False)
-# value_pre = db.Column(db.String(300), nullable=True, unique=False)
-# value_post = db.Column(db.String(300), nullable=False, unique=False)
-#
-# # Who made the edit ?
-# edit_by = db.Column(db.String(40), nullable=False, unique=False)
-# edit_comment = db.Column(db.String(300), nullable=True, unique=False)
-# edit_citation = db.Column(db.String(200), nullable=True, unique=False)
-#
-# # who approved the edit?
-# approved = db.Column(db.Boolean, server_default=expression.false(), nullable=False)
-# approved_by = db.Column(db.String(40), nullable=False, unique=False)
-# approved_comment = db.Column(db.String(300), nullable=True, unique=False)
 
 
 

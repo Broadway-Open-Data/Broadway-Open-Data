@@ -11,7 +11,7 @@ import datetime
 class DataEdits(db.Model, models.dbTable):
     """"""
     __tablename__ = "data_edits"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # can be used to groupby...
     edit_id = db.Column(db.Integer, nullable=False, unique=False, primary_key=True)
     edit_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)

@@ -28,13 +28,9 @@ db.init_app(app)
 with app.app_context():
 
     # Get a show and update it...
-
-    x = models.Show().query.order_by('opening_date').first()
+    x = models.Show.query.filter_by(title = "Who's Afraid of Virginia Woolf?").order_by(models.Show.opening_date.desc()).first()
 
     # update the value
-    new_website = 'http://https//americanutopiabroadway.com/'
+    new_website = 'https://virginiawoolfonbroadway.com'
     update_dict = {'official_website':new_website}
-    x.update_info({'official_website':new_website})
-
-
-    # print(x)
+    x.update_info(update_dict={'official_website':new_website})
