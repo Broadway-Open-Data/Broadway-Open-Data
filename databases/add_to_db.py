@@ -232,22 +232,38 @@ def add_people_and_roles(db):
     # 2.1 First define some lookup functions...
     @lru_cache
     def get_person_id(name_url):
-        return Person.query.filter_by(url=name_url).first().id
+        res = Person.query.filter_by(url=name_url).first()
+        if res:
+            return res.id
+        else:
+            return None
 
     @lru_cache
     def get_role_id(role_name):
-        return Role.query.filter_by(name=role_name).first().id
+        res = Role.query.filter_by(name=role_name).first()
+        if res:
+            return res.id
+        else:
+            my_role = Role(name = role_name)
+            my_role.save_to_db(skip_errors=True, verbose=False)
+        return my_role.id
+
 
     # 2.2 Go through each row
-    for idx, row in df.iterrows():
+    # Alternatively, process this in parallel...
+    # new_df = df[162_103::4].reset_index(drop=True)
+    new_df = df.reset_index(drop=True)
+    for idx, row in new_df.iterrows():
         # What is the person's id?
         my_id = get_person_id(row['name_URL'])
+        if not my_id:
+            continue
 
         if row['type']=='cast':
             role_id = get_role_id('performer')
             extra_data=row['role']
         else:
-            role_id = get_role_id(row['role'])
+            role_id = get_role_id(row['role'].lower())
             extra_data = None
 
         my_link = ShowsRolesLink(
@@ -261,7 +277,7 @@ def add_people_and_roles(db):
 
         # Print your progress
         if idx>0 and idx%100==0:
-            print(f"Created {idx:,} of {len(df):,} (%{100*idx/len(df):.3f})")
+            print(f"Created {idx:,} of {len(new_df):,} (%{100*idx/len(new_df):.3f})")
 
 
 
