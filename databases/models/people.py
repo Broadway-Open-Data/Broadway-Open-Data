@@ -14,7 +14,7 @@ from nameparser import HumanName
 
 
 
-class ShowsRolesLink(db.Model):
+class ShowsRolesLink(db.Model, models.dbTable):
     __tablename__ = 'shows_roles_link'
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
     show_id = db.Column(db.Integer, db.ForeignKey('shows.id'), primary_key=True)

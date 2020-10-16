@@ -17,7 +17,7 @@ class dbTable():
         return self.query.filter_by(id=id).first()
 
     # Method to save role to DB
-    def save_to_db(self, skip_errors=False):
+    def save_to_db(self, skip_errors=False, verbose=True):
         db.session.add(self)
 
         try:
@@ -26,10 +26,11 @@ class dbTable():
         except IntegrityError as err:
             db.session.rollback()
             if skip_errors:
-                print(f"{err}")
+                if verbose:
+                    print(f"{err}")
             else:
                 raise IntegrityError
-            
+
     # Method to remove role from DB
     def remove_from_db(self):
         db.session.delete(self)

@@ -4,9 +4,10 @@ sys.path.append(".")
 import numpy as np
 import pandas as pd
 import datetime
+from functools import lru_cache
 
 from databases import db
-from databases.models import Show, Theatre, Person, Role
+from databases.models import Show, Theatre, Person, Role, ShowsRolesLink
 from sqlalchemy.exc import IntegrityError
 
 pd.options.display.max_rows = 100
@@ -181,21 +182,18 @@ def add_people(db):
 # ------------------------------------------------------------------------------
 
 
-def add_people_and_roles(db):
+def add_roles(db):
     """
-    Add each role and its associated person & show to the db
+    Add each role
     """
 
 
     df = pd.read_csv("data/all_people_name_and_roles.csv")
 
-    # We don't need the full name
-    df.drop(columns=['name'], inplace=True)
-
     keep_cols = ['role', 'show_id', 'year', 'type', 'role_URL', 'name_URL']
     df = df[keep_cols]
 
-    # Step 1 is to create the roles
+    # 1.CREATE THE ROLES
     # All cast performers will be "Performer"
     all_roles = list(df[df['type']!='cast']['role'].str.lower().unique())
     all_roles.insert(0, 'performer')
@@ -205,50 +203,70 @@ def add_people_and_roles(db):
 
     for i, role_name in enumerate(all_roles):
 
-        # Don't save what you've already got...
-        # if len(role_name)>=40:
-        #     role_name = role_name[:40]
-
-        #
-        # # Otherwise, proceed
-        # else:
         my_role = Role(name = role_name)
 
         if my_role.name in saved_roles:
             None
             # print("already exists")
         else:
-            my_role.save_to_db(skip_errors=True)
+            my_role.save_to_db(skip_errors=True, verbose=True)
 
         # Print your progress
         if i>0 and i%100==0:
             print(f"Created {i:,} of {len(all_roles):,} (%{100*i/len(all_roles):.2f})")
 
 
-    # id = db.Column(db.Integer, primary_key=True)
-    # name = db.Column(db.String(40), unique=True, nullable=False)
-    # type = db.Column(db.String(40), unique=False, nullable=True)
-    # description = db.Column(db.String(255), unique=False, nullable=True)
-    #
+def add_people_and_roles(db):
+    """
+    Add each role and its associated person & show to the db
+    """
 
-    # print(df[['role', 'role_URL']].iloc[:10])
-    # cols_mapper = {
-    #     "name_URL": "url",
-    #     "name_title":"name_title",
-    #     "name_first":"f_name",
-    #     "name_middle":"m_name",
-    #     "name_last":"l_name",
-    #     "name_suffix Closed":"name_suffix",
-    #     "name_nickname":"name_nickname",
-    #     }
-    # df.rename(columns=cols_mapper, inplace=True)
-    #
-    # # Replace nan with non
-    # df.replace({np.nan: None}, inplace=True)
-    #
-    # # Go through each row
-    # for idx, row in df.iterrows():
-    #
+    df = pd.read_csv("data/all_people_name_and_roles.csv")
+    keep_cols = ['role', 'show_id', 'year', 'type', 'role_URL', 'name_URL']
+    df = df[keep_cols]
+
+    # Replace nan with non
+    df.replace({np.nan: None}, inplace=True)
+
+    # 2. ADD THE ROLES TO THE LINK TABLE
+
+    # 2.1 First define some lookup functions...
+    @lru_cache
+    def get_person_id(name_url):
+        return Person.query.filter_by(url=name_url).first().id
+
+    @lru_cache
+    def get_role_id(role_name):
+        return Role.query.filter_by(name=role_name).first().id
+
+    # 2.2 Go through each row
+    for idx, row in df.iterrows():
+        # What is the person's id?
+        my_id = get_person_id(row['name_URL'])
+
+        if row['type']=='cast':
+            role_id = get_role_id('performer')
+            extra_data=row['role']
+        else:
+            role_id = get_role_id(row['role'])
+            extra_data = None
+
+        my_link = ShowsRolesLink(
+            person_id=my_id,
+            show_id=row['show_id'],
+            role_id = role_id,
+            extra_data=extra_data,
+            url=row['role_URL']
+        )
+        my_link.save_to_db(skip_errors=True, verbose=False)
+
+        # Print your progress
+        if idx>0 and idx%100==0:
+            print(f"Created {idx:,} of {len(df):,} (%{100*idx/len(df):.3f})")
+        if idx>10**3:
+            break
+
+
     #     # This can prob be sped up, but I don't care rn...
     #     res = Person.query.filter_by(url=row['url']).first()
     #     if res:
