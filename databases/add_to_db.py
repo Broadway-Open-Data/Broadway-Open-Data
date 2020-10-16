@@ -149,22 +149,45 @@ def add_theatres(db):
 
 def add_people(db):
     """
-    Add all shows to the db
+    Add all people to the db
     """
 
-    # Get all existing show id's
-    # Now load the data for theatres
-    df = pd.read_json("data/all_people_info.json")
+    df = pd.read_csv("data/all_people_name_only.csv")
 
-    # Continue here...
+    # We don't need the full name
+    df.drop(columns=['name'], inplace=True)
+
+    cols_mapper = {
+        "name_URL": "url",
+        "name_title":"name_title",
+        "name_first":"f_name",
+        "name_middle":"m_name",
+        "name_last":"l_name",
+        "name_suffix Closed":"name_suffix",
+        "name_nickname":"name_nickname",
+        }
+    df.rename(columns=cols_mapper, inplace=True)
+
+    # Replace nan with non
+    df.replace({np.nan: None}, inplace=True)
+
 
     for idx, row in df.iterrows():
-        my_person = Person(
-                f_name="",
-                m_name="",
-                l_name="",
-                url=url,
-        )
+        print(row)
+        my_person = Person(**row)
+        my_person.save_to_db()
+        print("success!")
+
+        if idx>=5:
+            break
+
+    # for idx, row in df.iterrows():
+    #     my_person = Person(
+    #             f_name="",
+    #             m_name="",
+    #             l_name="",
+    #             url=url,
+    #     )
 
     # set df type
     # df["Theatre ID"] = df["Theatre ID"].fillna(0).astype(int)

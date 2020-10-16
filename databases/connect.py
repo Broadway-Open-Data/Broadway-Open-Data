@@ -20,7 +20,7 @@ import pandas as pd
 import numpy as np
 
 # custom stuff
-from databases.add_to_db import add_shows, query_all_shows, add_theatres
+from databases.add_to_db import add_shows, query_all_shows, add_theatres, add_people
 # ------------------------------------------------------------------------------
 
 
@@ -37,7 +37,7 @@ def do_all():
         # Don't need this...
         # db.create_all()
 
-        task_1 = True # manually toggle for now
+        task_1 = False # manually toggle for now
         if task_1:
 
             # If you want to query all the show ids...
@@ -56,8 +56,14 @@ def do_all():
 
             print("*****\nDONE! All data is living in the database.\n*****")
 
-        task_2 = False # manually toggle for now
+        task_2 = True # manually toggle for now
         if task_2:
+            # Add theatres
+            add_people(db)
+
+
+        task_3 = False # manually toggle for now
+        if task_3:
             my_show = Show.get_by_id(3)
             print(my_show)
 

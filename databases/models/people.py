@@ -35,7 +35,7 @@ class ShowsRolesLink(db.Model):
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(40), unique=True, nullable=False)
+    name = db.Column(db.String(40), unique=True, nullable=True)
     type = db.Column(db.String(40), unique=False, nullable=True)
     url = db.Column(db.String(120), unique=False, nullable=True)
     description = db.Column(db.String(255), unique=False, nullable=True)
@@ -165,10 +165,10 @@ class Person(db.Model, models.dbTable):
     # Assert is lowercase
     @validates('f_name', 'm_name', 'l_name', 'full_name', 'country_of_birth', 'fluent_languages')
     def convert_lower(self, key, value):
-        return value.lower()
-
-    # Methods
-
+        if isinstance(value, str):
+            return value.lower()
+        else:
+            return value
 
 
 
