@@ -20,7 +20,7 @@ class ShowsRolesLink(db.Model):
     show_id = db.Column(db.Integer, db.ForeignKey('shows.id'), primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
     extra_data = db.Column(db.String(256))
-
+    url = db.Column(db.String(120), unique=False, nullable=True)
 
 
 
@@ -35,9 +35,7 @@ class ShowsRolesLink(db.Model):
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(40), unique=True, nullable=False)
-    type = db.Column(db.String(40), unique=False, nullable=True)
-    url = db.Column(db.String(120), unique=False, nullable=True)
+    name = db.Column(db.String(40), unique=True, nullable=False) # All actors will be classified as "Performer"
     description = db.Column(db.String(255), unique=False, nullable=True)
 
     # models

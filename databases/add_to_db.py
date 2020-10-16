@@ -6,8 +6,10 @@ import pandas as pd
 import datetime
 
 from databases import db
-from databases.models import Show, Theatre, Person
+from databases.models import Show, Theatre, Person, Role
 from sqlalchemy.exc import IntegrityError
+
+pd.options.display.max_rows = 100
 
 # ------------------------------------------------------------------------------
 
@@ -190,7 +192,32 @@ def add_people_and_roles(db):
     # We don't need the full name
     df.drop(columns=['name'], inplace=True)
 
-    print(df.columns)
+    keep_cols = ['role', 'show_id', 'year', 'type', 'role_URL', 'name_URL']
+    df = df[keep_cols]
+
+    # Step 1 is to create the roles
+    # All cast performers will be "Performer"
+    all_roles = ['Performer']
+
+    # for role_name in all_roles:
+    #     my_role = Role(
+    #         name = role_name
+    #         )
+    #     print(my_role)
+
+
+
+    all_roles = df[df['type']!='cast']['role'].unique()
+    with open("data/all_roles.txt", "w") as f:
+        f.write("\n".join(all_roles))
+
+    # id = db.Column(db.Integer, primary_key=True)
+    # name = db.Column(db.String(40), unique=True, nullable=False)
+    # type = db.Column(db.String(40), unique=False, nullable=True)
+    # description = db.Column(db.String(255), unique=False, nullable=True)
+    #
+
+    # print(df[['role', 'role_URL']].iloc[:10])
     # cols_mapper = {
     #     "name_URL": "url",
     #     "name_title":"name_title",

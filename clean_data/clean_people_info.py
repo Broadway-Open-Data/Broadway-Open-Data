@@ -64,6 +64,14 @@ df_clean_2 = df_clean.drop(columns=drop_cols).merge(df_names_only, on='name', ho
 df_clean_2.to_csv('data/all_people_name_and_roles.csv', index=False)
 
 
+# Save all the roles...
+all_roles = df_clean_2[df_clean_2['type']!='cast']['role'].unique()
+with open("data/all_roles.txt", "w") as f:
+    f.write("\n".join(all_roles))
+
+
+# Now load the roles and try to slim down...
+
 # ------------------------------------------------------------------------------
 # Save here when finished
 print(f"saving data for {len(df_clean_2):,} records")
