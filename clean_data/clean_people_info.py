@@ -55,7 +55,7 @@ df_clean = pd.concat([df, df_name], axis=1, join='inner')
 
 keep_cols = [x for x in df_clean.columns if 'name' in x]
 df_names_only = df_clean.groupby('name', as_index=False).first()[keep_cols]
-df_names_only.to_csv('data/all_people_name_url_only.csv', index=False)
+df_names_only.to_csv('data/all_people_name_only.csv', index=False)
 
 
 # Clean it up – in case there are mispellings or whatever...
