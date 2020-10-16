@@ -47,6 +47,10 @@ class Show(db.Model, models.dbTable):
     other_titles = db.Column(db.String(300), nullable=True)
     official_website = db.Column(db.String(40), nullable=True)
 
+
+
+    def __repr__(self):
+        return f"{self.id}: {self.title} ({self.year})" 
     # relationships – build this later...
     # @hybrid_property
     # def people(self):

@@ -28,9 +28,17 @@ db.init_app(app)
 with app.app_context():
 
     # Get a show and update it...
-    x = models.Show.query.filter_by(id = 333086).order_by(models.Show.opening_date.desc()).first()
+    x = models.Person.query.filter_by(url = '/people/Lin-Manuel-Miranda/').first()
+
+    print(f"""
+    {x.full_name=}
+    {x.gender_identity=}
+    {x.racial_identity=}
+    {x.roles=}
+    {x.shows=}
+    """)
 
     # update the value
-    new_website = 'https://inresidenceonbroadway.com/'
-    update_dict = {'official_website':new_website}
-    x.update_info(update_dict={'official_website':new_website})
+    # new_website = 'https://inresidenceonbroadway.com/'
+    # update_dict = {'official_website':new_website}
+    # x.update_info(update_dict={'official_website':new_website})

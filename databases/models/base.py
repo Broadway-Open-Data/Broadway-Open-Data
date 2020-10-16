@@ -53,6 +53,7 @@ class dbTable():
         return json.dumps(data, default=str)
 
 
+
     @classmethod
     def find_type(self, colname):
         if hasattr(self, '__table__') and colname in self.__table__.c:

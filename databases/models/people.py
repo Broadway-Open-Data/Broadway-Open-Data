@@ -52,6 +52,8 @@ class Role(db.Model, models.dbTable):
         """Get the id, name, description of a role based on the role name"""
         return self.query.filter_by(name=name).first()
 
+    def __repr__(self):
+        return f"{self.id}: {self.name}"
 
 
 # --------------------------------------------------------------------------------
@@ -80,6 +82,8 @@ class RacialIdentity(db.Model, models.dbTable):
         """Get the id, name, description of a role based on the role name"""
         return self.query.filter_by(name=name).first()
 
+    def __repr__(self):
+        return f"{self.id}: {self.name}"
 
 # --------------------------------------------------------------------------------
 
@@ -102,8 +106,8 @@ class GenderIdentity(db.Model, models.dbTable):
         """Get the id, name, description of a role based on the role name"""
         return self.query.filter_by(name=name).first()
 
-
-
+    def __repr__(self):
+        return f"{self.id}: {self.name}"
 
 
 # --------------------------------------------------------------------------
@@ -129,7 +133,7 @@ class Person(db.Model, models.dbTable):
         name_string = " ".join(list(filter(None, [self.name_title, self.f_name, self.m_name, self.l_name, self.name_suffix, self.name_nickname])))
         full_name = HumanName(name_string)
         full_name.capitalize()
-        return full_name
+        return str(full_name)
 
 
     url = db.Column(db.String(120), unique=False, nullable=True)
