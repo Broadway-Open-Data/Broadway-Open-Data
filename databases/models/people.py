@@ -35,7 +35,7 @@ class ShowsRolesLink(db.Model):
 class Role(db.Model, models.dbTable):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(40), unique=True, nullable=True)
+    name = db.Column(db.String(40), unique=True, nullable=False)
     type = db.Column(db.String(40), unique=False, nullable=True)
     url = db.Column(db.String(120), unique=False, nullable=True)
     description = db.Column(db.String(255), unique=False, nullable=True)
@@ -121,9 +121,9 @@ class Person(db.Model, models.dbTable):
 
 
     name_title =  db.Column(db.String(10), nullable=True, unique=False)
-    f_name = db.Column(db.String(40), nullable=False, unique=False)
+    f_name = db.Column(db.String(40), nullable=True, unique=False)
     m_name = db.Column(db.String(40), nullable=True, unique=False)
-    l_name = db.Column(db.String(40), nullable=False, unique=False)
+    l_name = db.Column(db.String(40), nullable=True, unique=False)
     name_suffix = db.Column(db.String(10), nullable=True, unique=False)
     name_nickname = db.Column(db.String(40), nullable=True, unique=False)
 

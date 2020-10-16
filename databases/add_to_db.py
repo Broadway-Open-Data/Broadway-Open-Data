@@ -173,11 +173,14 @@ def add_people(db):
 
 
     for idx, row in df.iterrows():
-        print(row)
+        res = Person.query.filter_by(url=row['url']).first()
+        if res:
+            print(f"data already commited for name_URL={row['name_URL']}")
         my_person = Person(**row)
+
         my_person.save_to_db()
         print("success!")
-
+        #
         if idx>=5:
             break
 
