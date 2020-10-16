@@ -40,11 +40,10 @@ def add_shows(db):
     bool_cols = ["Show Never Opened","Revival","Pre-Broadway","Limited Run","Repertory"]
     df[bool_cols] = df[bool_cols].fillna(False)
     df["Theatre ID"] = df["Theatre ID"].fillna(0)
+
     # Fill na values
     df = df.where((pd.notnull(df)), None)
 
-    # This can be used to reference the columns in the sql schema
-    # sql_cols = Show.__table__.columns.keys()
 
     # Do these things now.. .
     now = datetime.datetime.utcnow()
