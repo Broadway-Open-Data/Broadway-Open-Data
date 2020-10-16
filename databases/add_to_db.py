@@ -70,22 +70,6 @@ def add_shows(db):
 # ------------------------------------------------------------------------------
 
 
-
-# ------------------------------------------------------------------------------
-
-def query_all_shows(db):
-    # Get all existing show id's
-    query_shows = db.session.query(Show.id).all()
-    all_show_ids = [int(x[0]) for x in query_shows]
-    return all_show_ids
-
-
-def query_all_theatres(db):
-    # Get all existing show id's
-    query_theatres = db.session.query(Theatre.id).all()
-    all_theatre_ids = [int(x[0]) for x in query_theatres]
-    return all_theatre_ids
-
 # ------------------------------------------------------------------------------
 
 def add_theatres(db):
@@ -152,6 +136,7 @@ def add_people(db):
     Add all people to the db
     """
 
+
     df = pd.read_csv("data/all_people_name_only.csv")
 
     # We don't need the full name
@@ -171,9 +156,10 @@ def add_people(db):
     # Replace nan with non
     df.replace({np.nan: None}, inplace=True)
 
-
+    # Go through each row
     for idx, row in df.iterrows():
 
+        # This can prob be sped up, but I don't care rn...
         res = Person.query.filter_by(url=row['url']).first()
         if res:
             None
@@ -189,16 +175,61 @@ def add_people(db):
         # if idx>10**3:
         #     break
 
-    # for idx, row in df.iterrows():
-    #     my_person = Person(
-    #             f_name="",
-    #             m_name="",
-    #             l_name="",
-    #             url=url,
-    #     )
 
-    # set df type
-    # df["Theatre ID"] = df["Theatre ID"].fillna(0).astype(int)
+# ------------------------------------------------------------------------------
+
+
+def add_people_and_roles(db):
+    """
+    Add each role and its associated person & show to the db
+    """
+
+
+    df = pd.read_csv("data/all_people_name_and_roles.csv")
+
+    # We don't need the full name
+    df.drop(columns=['name'], inplace=True)
+
+    print(df.columns)
+    # cols_mapper = {
+    #     "name_URL": "url",
+    #     "name_title":"name_title",
+    #     "name_first":"f_name",
+    #     "name_middle":"m_name",
+    #     "name_last":"l_name",
+    #     "name_suffix Closed":"name_suffix",
+    #     "name_nickname":"name_nickname",
+    #     }
+    # df.rename(columns=cols_mapper, inplace=True)
+    #
+    # # Replace nan with non
+    # df.replace({np.nan: None}, inplace=True)
+    #
+    # # Go through each row
+    # for idx, row in df.iterrows():
+    #
+    #     # This can prob be sped up, but I don't care rn...
+    #     res = Person.query.filter_by(url=row['url']).first()
+    #     if res:
+    #         None
+    #         # print(f"\t data already commited for {idx=}")
+    #     else:
+    #         my_person = Person(**row)
+    #
+    #         my_person.save_to_db()
+    #     #
+    #     if idx>0 and idx %10**3==0:
+    #         print(f"Downloaded {idx:,} of {len(df):,} (%{100*idx/len(df):.3f})")
+
+        # if idx>10**3:
+        #     break
+
+
+
+
+
+
+
 
 
 

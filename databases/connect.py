@@ -20,54 +20,77 @@ import pandas as pd
 import numpy as np
 
 # custom stuff
-from databases.add_to_db import add_shows, query_all_shows, add_theatres, add_people
+from databases import add_to_db
+# add_shows, query_all_shows, add_theatres, add_people, add_people_and_roles
 # ------------------------------------------------------------------------------
 
 
-# Create the app
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
+class ConnectApp():
+
+    def __init__(self, **kwargs):
+
+        # Instantiate a blank app
+        self.app = Flask(__name__)
+        self.app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
+        self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+        # instantiate the db
+        db.init_app(app=self.app)
+        self.app.app_context().push()
 
 
-def do_all():
+    # ------------------------------------------------------------------------------
 
-    with app.app_context():
-        # Don't need this...
-        # db.create_all()
+    # Create some methods
 
-        task_1 = False # manually toggle for now
-        if task_1:
+    def query_all_shows(self):
+        """Get all existing show ids"""
+        query_shows = db.session.query(Show.id).all()
+        all_show_ids = [int(x[0]) for x in query_shows]
+        return all_show_ids
 
-            # If you want to query all the show ids...
-            all_show_ids = query_all_shows(db)
-
-            # ------------------------------------------------------------------------------
-
-            # Add shows
-            add_shows(db)
-
-            # ------------------------------------------------------------------------------
-
-            # Add theatres
-            add_theatres(db)
+    def query_all_theatres(self):
+        """Get all existing show ids"""
+        query_theatres = db.session.query(Theatre.id).all()
+        all_theatre_ids = [int(x[0]) for x in query_theatres]
+        return all_theatre_ids
 
 
-            print("*****\nDONE! All data is living in the database.\n*****")
 
-        task_2 = True # manually toggle for now
-        if task_2:
-            # Add theatres
-            add_people(db)
-
-
-        task_3 = False # manually toggle for now
-        if task_3:
-            my_show = Show.get_by_id(3)
-            print(my_show)
+#
+# def do_all():
+#
+#
+#             # If you want to query all the show ids...
+#             all_show_ids = query_all_shows(db)
+#
+#             # ------------------------------------------------------------------------------
+#
+#             # Add shows
+#             add_shows(db)
+#
+#             # ------------------------------------------------------------------------------
+#
+#             # Add theatres
+#             add_theatres(db)
+#
+#
+#             print("*****\nDONE! All data is living in the database.\n*****")
+#
+#         task_2 = True # manually toggle for now
+#         if task_2:
+#             # Add theatres
+#             add_people(db)
+#
+#
+#         task_3 = False # manually toggle for now
+#         if task_3:
+#             my_show = Show.get_by_id(3)
+#             print(my_show)
 
 
 
 if __name__ =='__main__':
-    do_all()
+    # do_all()
+    db_app = ConnectApp()
+    add_to_db.add_people_and_roles(db)
