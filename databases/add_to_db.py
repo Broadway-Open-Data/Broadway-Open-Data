@@ -173,16 +173,21 @@ def add_people(db):
 
 
     for idx, row in df.iterrows():
+
         res = Person.query.filter_by(url=row['url']).first()
         if res:
-            print(f"data already commited for name_URL={row['name_URL']}")
-        my_person = Person(**row)
+            None
+            # print(f"\t data already commited for {idx=}")
+        else:
+            my_person = Person(**row)
 
-        my_person.save_to_db()
-        print("success!")
+            my_person.save_to_db()
         #
-        if idx>=5:
-            break
+        if idx>0 and idx %10**3==0:
+            print(f"Downloaded {idx:,} of {len(df):,} (%{100*idx/len(df):.3f})")
+
+        # if idx>10**3:
+        #     break
 
     # for idx, row in df.iterrows():
     #     my_person = Person(
