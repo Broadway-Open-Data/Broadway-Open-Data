@@ -263,25 +263,10 @@ def add_people_and_roles(db):
         # Print your progress
         if idx>0 and idx%100==0:
             print(f"Created {idx:,} of {len(df):,} (%{100*idx/len(df):.3f})")
-        if idx>10**3:
-            break
 
 
-    #     # This can prob be sped up, but I don't care rn...
-    #     res = Person.query.filter_by(url=row['url']).first()
-    #     if res:
-    #         None
-    #         # print(f"\t data already commited for {idx=}")
-    #     else:
-    #         my_person = Person(**row)
-    #
-    #         my_person.save_to_db()
-    #     #
-    #     if idx>0 and idx %10**3==0:
-    #         print(f"Downloaded {idx:,} of {len(df):,} (%{100*idx/len(df):.3f})")
 
-        # if idx>10**3:
-        #     break
+
 
 
 
