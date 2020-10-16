@@ -171,6 +171,19 @@ class Person(db.Model, models.dbTable):
             return value
 
 
+    def edit_gender_identity(self, value):
+
+        if self.gender_identity ==value:
+            # Do nothing
+            None
+        else:
+            my_gender = GenderIdentity.get_by_name(value)
+            if not my_gender:
+                my_gender = GenderIdentity(name=value)
+                my_gender.save_to_db()
+
+            # Now update
+            self.update_info(update_dict={'gender_identity_id':my_gender.id})
 
 
 

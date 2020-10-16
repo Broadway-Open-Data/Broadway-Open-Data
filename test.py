@@ -29,7 +29,9 @@ with app.app_context():
 
     # Get a show and update it...
     x = models.Person.query.filter_by(url = '/people/Lin-Manuel-Miranda/').first()
+    x.edit_gender_identity('male')
 
+    
     print(f"""
     {x.full_name=}
     {x.gender_identity=}
@@ -38,7 +40,7 @@ with app.app_context():
     {x.shows=}
     """)
 
+
     # update the value
-    # new_website = 'https://inresidenceonbroadway.com/'
     # update_dict = {'official_website':new_website}
     # x.update_info(update_dict={'official_website':new_website})
