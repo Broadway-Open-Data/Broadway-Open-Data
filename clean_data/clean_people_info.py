@@ -71,6 +71,9 @@ with open("data/all_roles.txt", "w") as f:
 
 
 # Now load the roles and try to slim down...
+with open("data/all_roles.txt", "r") as f:
+    all_roles = f.read().split("\n")
+
 
 # ------------------------------------------------------------------------------
 # Save here when finished

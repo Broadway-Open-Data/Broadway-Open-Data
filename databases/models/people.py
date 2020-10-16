@@ -54,8 +54,6 @@ class Role(db.Model, models.dbTable):
 
 
 
-
-
 # --------------------------------------------------------------------------------
 
 race_table = db.Table('racial_identity_lookup_table',

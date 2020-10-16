@@ -2,6 +2,7 @@ import json
 import datetime
 from databases import db
 from databases import models
+from sqlalchemy.exc import IntegrityError
 
 class dbTable():
     """
@@ -16,10 +17,19 @@ class dbTable():
         return self.query.filter_by(id=id).first()
 
     # Method to save role to DB
-    def save_to_db(self):
+    def save_to_db(self, skip_errors=False):
         db.session.add(self)
-        db.session.commit()
 
+        try:
+            db.session.commit()
+
+        except IntegrityError as err:
+            db.session.rollback()
+            if skip_errors:
+                print(f"{err}")
+            else:
+                raise IntegrityError
+            
     # Method to remove role from DB
     def remove_from_db(self):
         db.session.delete(self)

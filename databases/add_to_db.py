@@ -197,19 +197,33 @@ def add_people_and_roles(db):
 
     # Step 1 is to create the roles
     # All cast performers will be "Performer"
-    all_roles = ['Performer']
+    all_roles = list(df[df['type']!='cast']['role'].str.lower().unique())
+    all_roles.insert(0, 'performer')
 
-    # for role_name in all_roles:
-    #     my_role = Role(
-    #         name = role_name
-    #         )
-    #     print(my_role)
+    saved_roles = Role.query.with_entities(Role.name).all()
+    saved_roles = [x[0] for x in saved_roles]
 
+    for i, role_name in enumerate(all_roles):
 
+        # Don't save what you've already got...
+        # if len(role_name)>=40:
+        #     role_name = role_name[:40]
 
-    all_roles = df[df['type']!='cast']['role'].unique()
-    with open("data/all_roles.txt", "w") as f:
-        f.write("\n".join(all_roles))
+        #
+        # # Otherwise, proceed
+        # else:
+        my_role = Role(name = role_name)
+
+        if my_role.name in saved_roles:
+            None
+            # print("already exists")
+        else:
+            my_role.save_to_db(skip_errors=True)
+
+        # Print your progress
+        if i>0 and i%100==0:
+            print(f"Created {i:,} of {len(all_roles):,} (%{100*i/len(all_roles):.2f})")
+
 
     # id = db.Column(db.Integer, primary_key=True)
     # name = db.Column(db.String(40), unique=True, nullable=False)
