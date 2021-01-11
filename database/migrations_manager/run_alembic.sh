@@ -24,6 +24,5 @@ fi
 
 if $erd; then
   # general the ERD...
-  # python3 database/tests/connect_to_db.py
-  echo "cool"
+  python3 database/methods/generate_erd.py
 fi
