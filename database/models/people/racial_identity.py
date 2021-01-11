@@ -21,10 +21,10 @@ from database.models.base_table import BaseTable
 
 # --------------------------------------------------------------------------------
 
-
-race_table = Table('racial_identity_lookup_table',
-        Column('person_id', Integer(), ForeignKey('person.id')),
-        Column('racial_identity_id', Integer(), ForeignKey('racial_identity.id')))
+class RacialIdentityAssociation(Base):
+    __tablename__ = "racial_identity_association"
+    person_id = Column(Integer, ForeignKey('person.id'))
+    racial_identity_id = Column(Integer, ForeignKey('person.id'))
 
 
 class RacialIdentity(Base, BaseTable):
