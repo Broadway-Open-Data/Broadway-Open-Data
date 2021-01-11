@@ -24,27 +24,6 @@ from database.models.base_table import BaseTable
 
 
 
-class ShowsRolesLink(Base, BaseTable):
-    """
-    This table defines which people worked on which shows in which roles.
-
-    ----
-
-    Some sanity checks:
-        * a person can work on many shows
-        * a person in one show can have multiple roles
-        * a show can have many people with the same role
-
-    """
-    __tablename__ = 'shows_roles_link'
-
-    person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
-    show_id = Column(Integer, ForeignKey('show.id'), primary_key=True)
-    role_id = Column(Integer, ForeignKey('role.id'), primary_key=True)
-    extra_data = Column(TEXT, comment='Allow text of unlimited length')
-    url = Column(String(200), unique=False, nullable=True, comment='This field is optional.')
-
-
 
 # I might not need this association table...
 # A table for person, shows, and roles
@@ -85,32 +64,6 @@ class Role(Base, BaseTable):
     def __repr__(self):
         return f"{self.id}: {self.name}"
 
-
-# --------------------------------------------------------------------------------
-
-race_table = Table('racial_identity_lookup_table',
-        Column('person_id', Integer(), ForeignKey('person.id')),
-        Column('racial_identity_id', Integer(), ForeignKey('racial_identity.id')))
-
-
-class RacialIdentity(Base, BaseTable):
-    __tablename__ = "racial_identity"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False, unique=True, comment='constrain to lowercase values')
-    description = Column(String(200), unique=False, nullable=True, comment='This field is optional.')
-
-    # models
-    date_created = Column(DateTime, nullable=False, default=datetime.datetime.utcnow, comment='internally managed.')
-    date_updated = Column(DateTime, nullable=True, onupdate=datetime.datetime.utcnow, comment='internally managed.')
-
-
-    # Assert is lowercase
-    @validates('name')
-    def convert_lower(self, key, value):
-        return value.lower()
-
-    def __repr__(self):
-        return f"{self.id}: {self.name}"
 
 # --------------------------------------------------------------------------------
 
