@@ -23,8 +23,8 @@ from database.models.base_table import BaseTable
 
 class RacialIdentityAssociation(Base):
     __tablename__ = "racial_identity_association"
-    person_id = Column(Integer, ForeignKey('person.id'))
-    racial_identity_id = Column(Integer, ForeignKey('person.id'))
+    person_id = Column(Integer, ForeignKey('person.id'), primary_key=True, nullable=False)
+    racial_identity_id = Column(Integer, ForeignKey('person.id'), primary_key=True, nullable=False)
 
 
 class RacialIdentity(Base, BaseTable):
