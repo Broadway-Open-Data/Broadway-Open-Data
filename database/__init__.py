@@ -1,10 +1,10 @@
-# from .session import *
-from .connect import *
+from .connect import ConnectDb
+from .metadata import metadata
 
 # Create your database connection here
 session = ConnectDb().session
 
-from .metadata import metadata
+
 
 from . import methods
 from . import models
