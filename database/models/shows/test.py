@@ -2,7 +2,8 @@ import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 
 # app stuff
-from database.models import BaseTable
+from database.models.base import Base
+from database.models.base_table import BaseTable
 
 
 # ==============================================================================
@@ -17,5 +18,5 @@ class Foo(Base, BaseTable):
     __tablename__ = 'foo'
 
     id = Column(Integer, primary_key=True)
-    name = db.Column(db.String(40), unique=True, nullable=False)
-    description = db.Column(db.String(255), unique=False, nullable=True)
+    name = Column(String(40), unique=True, nullable=False)
+    description = Column(String(255), unique=False, nullable=True)

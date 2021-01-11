@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 # from sqlalchemy import Column, Integer, String
 from sqlalchemy import inspect
 
-from database import models
+# from database import models
 from database.models.base import Base
 # from database.models import DataEdits
 
@@ -15,7 +15,7 @@ from database import session
 
 
 
-class dbTable():
+class BaseTable():
     """
     Base class for all objects in a table
     """
