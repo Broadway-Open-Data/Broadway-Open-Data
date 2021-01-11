@@ -145,12 +145,12 @@ class Person(Base, BaseTable):
     roles = relationship('Role', secondary='shows_roles_link', backref=backref('person', lazy='dynamic'), passive_deletes=True)
     shows = relationship('Show', secondary='shows_roles_link', backref=backref('person', lazy='dynamic'), passive_deletes=True)
 
-    racial_identity = relationship(
-        'RacialIdentity',
-        secondary='racial_identity_lookup_table',
-        backref=backref('person', lazy='dynamic'),
-        passive_deletes=True
-    )
+    # racial_identity = relationship(
+    #     'RacialIdentity',
+    #     secondary='racial_identity_lookup_table',
+    #     backref=backref('person', lazy='dynamic'),
+    #     passive_deletes=True
+    # )
 
 
     #  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
