@@ -10,7 +10,9 @@ import datetime
 # ------------------------------------------------------------------------------
 
 class Show(db.Model, models.dbTable):
-    """"""
+    """
+    A table representing a broadway show.
+    """
     __tablename__ = "shows"
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=lambda: int(str(int(uuid.uuid4()))[:7]), unique=True, index=True)
     date_instantiated = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
@@ -50,7 +52,7 @@ class Show(db.Model, models.dbTable):
 
 
     def __repr__(self):
-        return f"{self.id}: {self.title} ({self.year})" 
+        return f"{self.id}: {self.title} ({self.year})"
     # relationships – build this later...
     # @hybrid_property
     # def people(self):
