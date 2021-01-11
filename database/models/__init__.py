@@ -2,6 +2,7 @@ from .base import *
 from .base_table import *
 
 from . import shows
+from . import theatres
 # from .people import *
 # from .shows import *
 # from .theatres import *

@@ -4,16 +4,15 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.sql import expression
 from sqlalchemy.orm import validates, relationship, backref
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.associationproxy import association_proxy
 
 # mysql specific columns
 from sqlalchemy.dialects.mysql import TINYINT, YEAR
 
 
 # app stuff
-# from databases import db, models
 from database.models.base import Base
 from database.models.base_table import BaseTable
-
 
 
 # ------------------------------------------------------------------------------
@@ -22,7 +21,7 @@ class Show(Base, BaseTable):
     """
     A table representing a broadway show.
     """
-    __tablename__ = "shows"
+    __tablename__ = 'show'
 
     id = Column(Integer, primary_key=True)
     date_instantiated = Column(DateTime, nullable=False, default=datetime.datetime.utcnow, comment='internally managed')
@@ -35,8 +34,9 @@ class Show(Base, BaseTable):
     year = Column(YEAR, index=True, nullable=True) # I'd prefer to have this stored as a datetime?
 
     # theatre
-    # theatre_id = Column(Integer, default=0, nullable=False)
-    theatre_name = Column(String(60), index=False, nullable=True)
+    theatre_id = Column(Integer, ForeignKey('theatre.id'), nullable=True, index=True)
+    scraped_theatre_name = Column(String(60), index=False, nullable=True)
+
 
     # types
     production_type = Column(String(20), nullable=True) # Convert to a join table
@@ -62,6 +62,14 @@ class Show(Base, BaseTable):
     official_website = Column(String(100), nullable=True, comment="this should be made into an associated table...")
 
 
+    #  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    # RELATIONSHIPS
+    theatre = relationship('Theatre', backref='show', passive_deletes=True)
+    theatre_name = association_proxy('theatre', 'theatre_name')
+
+
+
+    #  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     def __repr__(self):
         return f"{self.id}: {self.title} ({self.year})"

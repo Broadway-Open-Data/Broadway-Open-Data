@@ -3,7 +3,7 @@ from databases import db, models
 import datetime
 
 
-class Theatre(db.Model, models.dbTable):
+class Theatre(Base, BaseTable):
     """"""
     __tablename__ = "theatres"
     id = db.Column(db.Integer, primary_key=True, nullable=False, default=0, unique=True, index=True)
