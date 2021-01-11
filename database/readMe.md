@@ -2,7 +2,7 @@ Helpful stuff for this database.
 
 ## Database Management
 To restart local db:
-`pg_ctl -D /usr/local/var/ta_2.0 start`
+`/usr/local/mysql/support-files/mysql.server start`
 
 # Migrations
 To run alembic migrations, execute from project root with the following:
