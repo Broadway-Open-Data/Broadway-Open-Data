@@ -5,6 +5,5 @@ from .metadata import metadata
 session = ConnectDb().session
 
 
-
 from . import methods
 from . import models
