@@ -3,7 +3,7 @@ Use this to manage migrations. For fuller documentation, read the [confluence do
 
 
 # Making Migrations (Semi-Automated Commands)
-Run the following command: `bash database/migrations_manager/run_alembic.sh -m "upgrading this through shell commands" -u -r`
+Run the following command: `bash database/migrations_manager/run_alembic.sh -m "message" -u -r`
 * `-m` is the revision message which will be passed to alembic
 * `-u` is an optional flag which will upgrade the db to the current head.
 * `-r` is an optional flag which will generate an erd.

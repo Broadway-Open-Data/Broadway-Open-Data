@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.dialects.mysql import TEXT, YEAR
 
 from sqlalchemy.sql import expression
