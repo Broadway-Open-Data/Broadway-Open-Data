@@ -3,11 +3,9 @@ import json
 import datetime
 from sqlalchemy.orm import class_mapper, ColumnProperty
 from sqlalchemy.exc import IntegrityError
-# from sqlalchemy import Column, Integer, String
 from sqlalchemy import inspect
 
-# from database import models
-from database.models.base import Base
+
 # from database.models import DataEdits
 
 
