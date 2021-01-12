@@ -1,5 +1,4 @@
-Use this to manage migrations. For fuller documentation, read the [confluence documentation](https://timeadvisors.atlassian.net/wiki/spaces/TAD/pages/316309505/Database+Architecture#Migrations-Manager)
-
+Use this to manage migrations.
 
 
 # Making Migrations (Semi-Automated Commands)
