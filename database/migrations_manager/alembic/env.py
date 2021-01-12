@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 sys.path.append('/Users/yaakov/Documents/Open Broadway Data/Data-Collection/')
+sys.path.append('/Users/nickwilders/Desktop/obd/Data-Collection')
 
 
 from logging.config import fileConfig
