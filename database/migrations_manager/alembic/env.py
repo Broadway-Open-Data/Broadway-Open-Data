@@ -6,6 +6,7 @@ if os.environ.get('PROJECT_PATH'):
 
 # Append the path to the root directory of the project
 sys.path.append('/Users/yaakov/Documents/Open Broadway Data/Data-Collection/')
+sys.path.append('/Users/nickwilders/Desktop/obd/Data-Collection')
 
 
 from logging.config import fileConfig

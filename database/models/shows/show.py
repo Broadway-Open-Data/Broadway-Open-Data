@@ -27,7 +27,7 @@ class Show(Base, BaseTable):
     date_instantiated = Column(DateTime, nullable=False, default=datetime.datetime.utcnow, comment='internally managed')
 
     # the basics
-    title = Column(String(200), nullable=True)
+    title = Column(String(200), nullable=True, comment='This is the name of the show.')
     opening_date = Column(DateTime, nullable=True, index=True)
     closing_date = Column(DateTime, nullable=True, index=True)
     previews_date = Column(DateTime, nullable=True)

@@ -52,5 +52,5 @@ def test_show_schema():
         assert type(show_fields[key]) == type(value)
 
 
-if __nam__ == '__main__':
+if __name__ == '__main__':
     test_show_schema()
