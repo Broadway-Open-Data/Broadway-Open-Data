@@ -1,5 +1,10 @@
+import os
 import sys
 from pathlib import Path
+if os.environ.get('PROJECT_PATH'):
+    sys.path.append(os.environ.get('PROJECT_PATH'))
+
+# Append the path to the root directory of the project
 sys.path.append('/Users/yaakov/Documents/Open Broadway Data/Data-Collection/')
 
 
