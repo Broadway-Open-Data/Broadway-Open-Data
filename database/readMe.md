@@ -15,3 +15,6 @@ as follows:
 * `-u` is a flag to upgrade.
 * `-r` is a flag to generate an erd.
 For further details, read the docs in [database/migrations_manager](migrations_manager/)
+
+# [Tests](tests/)
+Use `pytest` to run tests: `pytest database/tests -v`
