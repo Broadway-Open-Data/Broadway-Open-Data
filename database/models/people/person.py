@@ -121,6 +121,7 @@ class Person(Base, BaseTable):
         methods.person.update_gender_identity(self, op, value)
 
 
+
     def update_racial_identity(self, op, value):
         """
         Will update a person's racial identity. (This is kind of a copy of updating
