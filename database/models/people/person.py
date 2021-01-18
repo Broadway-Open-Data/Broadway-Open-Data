@@ -19,73 +19,6 @@ from database.models.base import Base
 from database.models.base_table import BaseTable
 
 
-
-# --------------------------------------------------------------------------------
-
-
-
-
-# I might not need this association table...
-# A table for person, shows, and roles
-# roles_table = Table('roles_table',
-#         Column('person_id', Integer(), ForeignKey('person.id')),
-#         Column('role_id', Integer(), ForeignKey('role.id')))
-
-
-class Role(Base, BaseTable):
-    """
-    A table representing a possible job titles ("roles") for working on a Broadway show.
-    """
-
-    __tablename__ = 'role'
-
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), unique=True, nullable=False, comment='constrain to lowercase values') # All actors will be classified as "Performer"
-    description = Column(String(200), unique=False, nullable=True, comment='This field is optional.')
-
-    # models
-    date_created = Column(DateTime, nullable=False, default=datetime.datetime.utcnow, comment='internally managed.')
-    date_updated = Column(DateTime, nullable=True, onupdate=datetime.datetime.utcnow, comment='internally managed.')
-
-
-    # Assert is lowercase
-    @validates('name')
-    def convert_lower(self, key, value):
-        return value.lower()
-
-
-    # # Methods
-    # @classmethod
-    # def get_by_name(self, name):
-    #     """Get the id, name, description of a role based on the role name"""
-    #     return self.query.filter_by(name=name).first()
-
-    def __repr__(self):
-        return f"{self.id}: {self.name}"
-
-
-# --------------------------------------------------------------------------------
-
-class GenderIdentity(Base, BaseTable):
-    __tablename__ = "gender_identity"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False, unique=True, comment='constrain to lowercase values')
-    description = Column(String(200), unique=False, nullable=True, comment='This field is optional.')
-
-    # internally managed
-    date_created = Column(DateTime, nullable=False, default=datetime.datetime.utcnow, comment='internally managed.')
-    date_updated = Column(DateTime, nullable=True, onupdate=datetime.datetime.utcnow, comment='internally managed.')
-
-    # Assert is lowercase
-    @validates('name')
-    def convert_lower(self, key, value):
-        return value.lower()
-
-    def __repr__(self):
-        return f"{self.id}: {self.name}"
-
-
 # --------------------------------------------------------------------------
 
 
@@ -133,25 +66,30 @@ class Person(Base, BaseTable):
 
 
     # --------------------------------------------------------------------------
-    # Need to revisit these relationships
-
-    gender_identity_id = Column(Integer, ForeignKey('gender_identity.id'))
-    gender_identity = relationship('GenderIdentity', backref="person")
-
-    # --------------------------------------------------------------------------
 
     # one to many
-    # roles = relationship('Role', secondary=roles_table, backref=backref('person', lazy='dynamic'), passive_deletes=True)
     roles = relationship('Role', secondary='shows_roles_link', backref=backref('person', lazy='dynamic'), passive_deletes=True)
     shows = relationship('Show', secondary='shows_roles_link', backref=backref('person', lazy='dynamic'), passive_deletes=True)
 
-    racial_identity = relationship(
+    # --------------------------------------------------------------------------
+
+    # Create a relationship for racial identities
+    _racial_identity = relationship(
         'RacialIdentity',
         secondary='racial_identity_association',
         backref=backref('person', lazy='dynamic'),
         passive_deletes=True
     )
+    racial_identity = association_proxy('_racial_identity', 'name')
 
+    # Create a relationship for gender identities
+    _gender_identity = relationship(
+        'GenderIdentity',
+        secondary='gender_identity_association',
+        backref=backref('person', lazy='dynamic'),
+        passive_deletes=True
+    )
+    gender_identity = association_proxy('_gender_identity', 'name')
 
     #  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     # VALIDATION
@@ -168,7 +106,25 @@ class Person(Base, BaseTable):
 
     # DATA EDITS
 
-    # def edit_gender_identity(self, value):
+    # def change_gender_identity(self, op, value):
+    #     """
+    #     Will update a person's gender identity.
+    #
+    #     Params:
+    #         op: (str) Operation. Either "equal" or "append"
+    #             "equal" --> will assert that this person's gender identity matches provided value(s)
+    #             "append" --> will add if this person's gender identity doesn't contain the provided value(s)
+    #         value: (str|list) either a string or a list of values
+    #     """
+    #     # make sure the operation is valid
+    #     assert op in ('equal', 'append')
+    #
+    #     # if a string, convert to a tuple
+    #     if isinstance(value, (str)):
+    #         value = (value, )
+    #
+    #     if op=='equal':
+    #
     #
     #     if self.gender_identity ==value:
     #         # Do nothing
