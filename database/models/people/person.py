@@ -108,7 +108,7 @@ class Person(Base, BaseTable):
 
     # DATA EDITS
 
-    def change_gender_identity(self, op, value):
+    def update_gender_identity(self, op, value):
         """
         Will update a person's gender identity. (This should work for racial identity too...)
 
@@ -121,32 +121,48 @@ class Person(Base, BaseTable):
         # make sure the operation is valid
         assert op in ('equal', 'append')
 
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
         # if a string, convert to a tuple
         if isinstance(value, (str)):
             value = (value, )
 
+        need_to_commit = False
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
         if op=='equal':
-            for v in value:
-                # add the gender identity
-                if v not in self.gender_identity:
-                    # Hacked get or create method
-                    my_gender_id = GenderIdentity.get_by_attr('name', v.lower())
-                    if not my_gender_id:
-                        my_gender_id = GenderIdentity(name=v.lower())
-                    self._gender_identity.append(my_gender_id)
+            # add the gender identity
+            for gender in value:
+                if gender not in self.gender_identity:
+                    my_gender = GenderIdentity.get_or_create({'name':gender.lower()})
+                    self._gender_identity.append(my_gender)
+                    need_to_commit = True
 
+            for gender in self.gender_identity:
+                if gender not in value:
+                    self.gender_identity.remove(gender)
+                    need_to_commit = True
+            # finally, commit
+            if need_to_commit:
+                session.commit()
 
-        if self.gender_identity ==value:
-            # Do nothing
-            None
-        else:
-            my_gender = GenderIdentity.get_by_name(value)
-            if not my_gender:
-                my_gender = GenderIdentity(name=value)
-                my_gender.save_to_db()
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-            # Now update
-            self.update_info(update_dict={'gender_identity_id':my_gender.id})
+        # otherwise
+        elif op=='append':
+            # add if you need to add
+            for gender in value:
+                if gender not in self.gender_identity:
+                    my_gender = GenderIdentity.get_or_create({'name':gender.lower()})
+                    self._gender_identity.append(my_gender)
+                    need_to_commit = True
+            # That's all
+            if need_to_commit:
+                session.commit()
+
+        # No other choices
+        # Done
+
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
 
