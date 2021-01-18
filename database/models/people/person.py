@@ -18,6 +18,8 @@ from sqlalchemy.dialects.mysql import TINYINT, YEAR
 from database.models.base import Base
 from database.models.base_table import BaseTable
 
+# database models
+from database.models.people.gender_identity import GenderIdentity
 
 # --------------------------------------------------------------------------
 
@@ -106,37 +108,45 @@ class Person(Base, BaseTable):
 
     # DATA EDITS
 
-    # def change_gender_identity(self, op, value):
-    #     """
-    #     Will update a person's gender identity.
-    #
-    #     Params:
-    #         op: (str) Operation. Either "equal" or "append"
-    #             "equal" --> will assert that this person's gender identity matches provided value(s)
-    #             "append" --> will add if this person's gender identity doesn't contain the provided value(s)
-    #         value: (str|list) either a string or a list of values
-    #     """
-    #     # make sure the operation is valid
-    #     assert op in ('equal', 'append')
-    #
-    #     # if a string, convert to a tuple
-    #     if isinstance(value, (str)):
-    #         value = (value, )
-    #
-    #     if op=='equal':
-    #
-    #
-    #     if self.gender_identity ==value:
-    #         # Do nothing
-    #         None
-    #     else:
-    #         my_gender = GenderIdentity.get_by_name(value)
-    #         if not my_gender:
-    #             my_gender = GenderIdentity(name=value)
-    #             my_gender.save_to_db()
-    #
-    #         # Now update
-    #         self.update_info(update_dict={'gender_identity_id':my_gender.id})
+    def change_gender_identity(self, op, value):
+        """
+        Will update a person's gender identity. (This should work for racial identity too...)
+
+        Params:
+            op: (str) Operation. Either "equal" or "append"
+                "equal" --> will assert that this person's gender identity matches provided value(s)
+                "append" --> will add if this person's gender identity doesn't contain the provided value(s)
+            value: (str|list) either a string or a list of values
+        """
+        # make sure the operation is valid
+        assert op in ('equal', 'append')
+
+        # if a string, convert to a tuple
+        if isinstance(value, (str)):
+            value = (value, )
+
+        if op=='equal':
+            for v in value:
+                # add the gender identity
+                if v not in self.gender_identity:
+                    # Hacked get or create method
+                    my_gender_id = GenderIdentity.get_by_attr('name', v.lower())
+                    if not my_gender_id:
+                        my_gender_id = GenderIdentity(name=v.lower())
+                    self._gender_identity.append(my_gender_id)
+
+
+        if self.gender_identity ==value:
+            # Do nothing
+            None
+        else:
+            my_gender = GenderIdentity.get_by_name(value)
+            if not my_gender:
+                my_gender = GenderIdentity(name=value)
+                my_gender.save_to_db()
+
+            # Now update
+            self.update_info(update_dict={'gender_identity_id':my_gender.id})
 
 
 

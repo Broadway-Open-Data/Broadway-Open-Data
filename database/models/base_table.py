@@ -78,7 +78,7 @@ class BaseTable():
         """
         Get the an entity based on the first match of a give attribute.
 
-        Ex: get('full_name','Brad Pitt')
+        Ex: get_by_attr('full_name','Brad Pitt')
             returns --> get first instance of Brad Pitt (or None)
         """
 
@@ -123,6 +123,19 @@ class BaseTable():
         self.save_to_db()
 
 
+
+    @classmethod
+    def get_or_create(self, **kwargs):
+        """Get or create based on pairs of attribute and values"""
+
+        res = session.query(self).filter_by(**kwargs).first()
+
+        # Always add to the session
+        if not res:
+            res = self(**kwargs)
+            session.add(res)
+
+        return res
 
     # --------------------------------------------------------------------------
     # Save updates
