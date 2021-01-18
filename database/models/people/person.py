@@ -20,6 +20,7 @@ from database.models.base_table import BaseTable
 
 # database models
 from database.models.people.gender_identity import GenderIdentity
+from database.models.people.racial_identity import RacialIdentity
 
 # --------------------------------------------------------------------------
 
@@ -131,15 +132,15 @@ class Person(Base, BaseTable):
         # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
         if op=='equal':
             # add the gender identity
-            for gender in value:
-                if gender not in self.gender_identity:
-                    my_gender = GenderIdentity.get_or_create({'name':gender.lower()})
-                    self._gender_identity.append(my_gender)
+            for x in value:
+                if x not in self.gender_identity:
+                    my_gender_id = GenderIdentity.get_or_create({'name':x.lower()})
+                    self._gender_identity.append(my_gender_id)
                     need_to_commit = True
 
-            for gender in self.gender_identity:
-                if gender not in value:
-                    self.gender_identity.remove(gender)
+            for x in self.gender_identity:
+                if x not in value:
+                    self.gender_identity.remove(x)
                     need_to_commit = True
             # finally, commit
             if need_to_commit:
@@ -150,10 +151,10 @@ class Person(Base, BaseTable):
         # otherwise
         elif op=='append':
             # add if you need to add
-            for gender in value:
-                if gender not in self.gender_identity:
-                    my_gender = GenderIdentity.get_or_create({'name':gender.lower()})
-                    self._gender_identity.append(my_gender)
+            for x in value:
+                if x not in self.gender_identity:
+                    my_gender_id = GenderIdentity.get_or_create({'name':x.lower()})
+                    self._gender_identity.append(my_gender_id)
                     need_to_commit = True
             # That's all
             if need_to_commit:
@@ -165,6 +166,64 @@ class Person(Base, BaseTable):
         # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
+    def update_racial_identity(self, op, value):
+        """
+        Will update a person's racial identity. (This is kind of a copy of updating
+        racial identity. Not the best DRY code, but it works!)
+
+        Params:
+            op: (str) Operation. Either "equal" or "append"
+                "equal" --> will assert that this person's racial identity matches provided value(s)
+                "append" --> will add if this person's racial identity doesn't contain the provided value(s)
+            value: (str|list) either a string or a list of values
+        """
+        # make sure the operation is valid
+        assert op in ('equal', 'append')
+
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+        # if a string, convert to a tuple
+        if isinstance(value, (str)):
+            value = (value, )
+
+        need_to_commit = False
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+        if op=='equal':
+            # add the racial identity
+            for x in value:
+                if x not in self.racial_identity:
+                    my_racial_id = RacialIdentity.get_or_create({'name':x.lower()})
+                    self._racial_identity.append(my_racial_id)
+                    need_to_commit = True
+
+            for x in self.racial_identity:
+                if x not in value:
+                    self.racial_identity.remove(x)
+                    need_to_commit = True
+
+            # finally, commit (if you need to)
+            if need_to_commit:
+                session.commit()
+
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+        # otherwise
+        elif op=='append':
+            # add if you need to add
+            for x in value:
+                if x not in self.racial_identity:
+                    my_racial_id = RacialIdentity.get_or_create({'name':x.lower()})
+                    self._racial_identity.append(my_racial_id)
+                    need_to_commit = True
+
+            # That's all
+            if need_to_commit:
+                session.commit()
+
+        # No other choices
+        # Done
+
+        # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 
 
