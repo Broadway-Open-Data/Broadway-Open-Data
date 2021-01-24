@@ -18,6 +18,7 @@ from sqlalchemy.dialects.mysql import TINYINT, YEAR
 from database.models.base import Base
 from database.models.base_table import BaseTable
 
+# Database methods
 from database import methods
 
 
